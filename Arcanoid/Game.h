@@ -2,7 +2,6 @@
 #include <random>
 #include <vector>
 #include <unordered_map>
-#include "Level.h"
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "GameState.h"
@@ -44,8 +43,8 @@ namespace Arcanoid
 		void SwitchStateTo(GameStateType stateType);
 
 		std::vector<int> GetRecordsTable() const;
-
-		SoundManager soundManager;
+		SoundManager& GetSoundManager() { return this->soundManager; }
+		
 	private:
 		std::vector<GameState> gameStateStack;
 		GameStateChangeType gameStateChangeType = GameStateChangeType::None;
@@ -54,6 +53,7 @@ namespace Arcanoid
 		GameOptions options = GameOptions::DEFAULT;
 		std::vector<int> recordsTable;
 		int currentScore = 0;
+		SoundManager soundManager;
 
 		void LoadTableFromFile(std::string tablePath);
 		void TypeTableToFile(std::string tablePath);

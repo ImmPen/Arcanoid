@@ -6,14 +6,15 @@
 
 namespace Arcanoid
 {
-	void Platform::Init()
+	Platform::Platform(sf::Vector2f& position)
+		: GameObject(
+			RESOURCES_PATH + "spritesheet-breakout.png",
+			PLATFORM_RECT_IN_TEXTURE,
+			position,
+			PLATFORM_WIDTH, PLATFORM_HEIGHT)
 	{
-		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", PLATFORM_RECT_IN_TEXTURE));
-		
-		InitSprite(this->sprite, PLATFORM_WIDTH, PLATFORM_HEIGHT, this->texture);
-		this->sprite.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT - PLATFORM_HEIGHT / 2.f);
-	}
 
+	}
 	void Platform::Update(float timeDelta)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -26,19 +27,36 @@ namespace Arcanoid
 		}
 	}
 
-	void Platform::Draw(sf::RenderWindow& window)
+	bool Platform::CheckCollision(std::shared_ptr<ICollidable> collidable)
 	{
-		DrawSprite(this->sprite, window);
+		auto ball = std::static_pointer_cast<Ball>(collidable);
+		if (!ball)
+		{
+			return false;
+		}
+		if (GetCollision(ball))
+		{
+			auto rect = this->GetRect();
+			auto ballPosOnPlatform = (ball->GetPosition().x - (rect.left + rect.width / 2)) / (rect.width / 2);
+			ball->ChangeAngle(90 - 20 * ballPosOnPlatform);
+			return true;
+		}
+		return	false;
 	}
 
-	bool Platform::CheckCollisionWithBall(const Ball& ball)
+	bool Platform::GetCollision(std::shared_ptr<ICollidable> collidable) const
 	{
+		auto ball = std::static_pointer_cast<Ball>(collidable);
+		if (!ball)
+		{
+			return false;
+		}
 		auto sqr = [](float x) {
 			return x * x;
 			};
 
-		const auto rect = sprite.getGlobalBounds();
-		const auto ballPos = ball.GetPosition();
+		const auto rect = this->GetSpriteRect();
+		const auto ballPos = ball->GetPosition();
 
 		if (ballPos.x < rect.left) {
 			return sqr(ballPos.x - rect.left) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0);

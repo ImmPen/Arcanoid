@@ -4,138 +4,58 @@
 #include "GameStateMainMenu.h"
 #include "GameStatePause.h"
 #include "GameStateRecords.h"
+
 namespace Arcanoid
 {
-	GameState::GameState(GameStateType type)
+	GameState::GameState(GameStateType type) : 
+		type(type)
 	{
 		switch (type)
 		{
 		case GameStateType::Playing:
-			this->type = type;
-			this->data = new GameStatePlayingData();
-			((GameStatePlayingData*)data)->Init();
+			this->data = std::make_unique<GameStatePlayingData>();
 			break;
 		case GameStateType::GameOver:
-			this->type = type;
-			this->data = new GameStateGameOverData();
-			((GameStateGameOverData*)data)->Init();
+			this->data = std::make_unique<GameStateGameOverData>();
 			break;
 		case GameStateType::MainMenu:
-			this->type = type;
-			this->data = new GameStateMainMenuData();
-			((GameStateMainMenuData*)data)->Init();
+			this->data = std::make_unique<GameStateMainMenuData>();
 			break;
 		case GameStateType::Pause:
-			this->type = type;
-			this->data = new GameStatePauseData();
-			((GameStatePauseData*)data)->Init();
+			this->data = std::make_unique<GameStatePauseData>();
 			break;
 		case GameStateType::Records:
-			this->type = type;
-			this->data = new GameStateRecordsData();
-			((GameStateRecordsData*)data)->Init();
+			this->data = std::make_unique<GameStateRecordsData>();
 			break;
 		default:
 			break;
+		}
+		if (data)
+		{
+			data->Init();
 		}
 	}
 
 	GameState::~GameState()
 	{
-		if (this->data)
+		if (data)
 		{
-			switch (this->type)
-			{
-			case GameStateType::Playing:
-				delete ((GameStatePlayingData*)data);
-				break;
-			case GameStateType::GameOver:
-				delete ((GameStateGameOverData*)data);
-				break;
-			case GameStateType::MainMenu:
-				delete ((GameStateMainMenuData*)data);
-				break;
-			case GameStateType::Pause:
-				delete ((GameStatePauseData*)data);
-				break;
-			case GameStateType::Records:
-				delete ((GameStateRecordsData*)data);
-				break;
-			default:
-				break;
-			}
+			data = nullptr;
 		}
 	}
 
 	void GameState::Update(float timeDelta)
 	{
-		switch (this->type)
-		{
-		case GameStateType::Playing:
-			((GameStatePlayingData*)data)->Update(timeDelta);
-			break;
-		case GameStateType::GameOver:
-			((GameStateGameOverData*)data)->Update(timeDelta);
-			break;
-		case GameStateType::MainMenu:
-			((GameStateMainMenuData*)data)->Update(timeDelta);
-			break;
-		case GameStateType::Pause:
-			((GameStatePauseData*)data)->Update(timeDelta);
-			break;
-		case GameStateType::Records:
-			((GameStateRecordsData*)data)->Update(timeDelta);
-			break;
-		default:
-			break;
-		}
+		data->Update(timeDelta);
 	}
 
 	void GameState::Draw(sf::RenderWindow& window)
 	{
-		switch (this->type)
-		{
-		case GameStateType::Playing:
-			((GameStatePlayingData*)data)->Draw(window);
-			break;
-		case GameStateType::GameOver:
-			((GameStateGameOverData*)data)->Draw(window);
-			break;
-		case GameStateType::MainMenu:
-			((GameStateMainMenuData*)data)->Draw(window);
-			break;
-		case GameStateType::Pause:
-			((GameStatePauseData*)data)->Draw(window);
-			break;
-		case GameStateType::Records:
-			((GameStateRecordsData*)data)->Draw(window);
-			break;
-		default:
-			break;
-		}
+		data->Draw(window);
 	}
 
 	void GameState::HandleWindowEvent(sf::Event& event)
 	{
-		switch (this->type)
-		{
-		case GameStateType::Playing:
-			((GameStatePlayingData*)data)->HandleWindowEvent(event);
-			break;
-		case GameStateType::GameOver:
-			((GameStateGameOverData*)data)->HandleWindowEvent(event);
-			break;
-		case GameStateType::MainMenu:
-			((GameStateMainMenuData*)data)->HandleWindowEvent(event);
-			break;
-		case GameStateType::Pause:
-			((GameStatePauseData*)data)->HandleWindowEvent(event);
-			break;
-		case GameStateType::Records:
-			((GameStateRecordsData*)data)->HandleWindowEvent(event);
-			break;
-		default:
-			break;
-		}
+		data->HandleWindowEvent(event);
 	}
 }

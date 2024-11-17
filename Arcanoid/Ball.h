@@ -1,21 +1,28 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "GameObject.h"
+#include "Block.h"
+
 namespace Arcanoid
 {
-	class Ball
+	class Ball : public GameObject, public ICollidable
 	{
 	public:
-		void Init();
-		void Update(float timeDelta);
-		void Draw(sf::RenderWindow& window);
+		Ball(sf::Vector2f& position);
+		~Ball() override = default;
 
-		void ReboundFromPlatform();
+		void Update(float timeDelta) override;
 
-		const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
+		void InvertDirectionX();
+		void InvertDirectionY();
+
+		bool GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
+		void ChangeAngle(float angle);
+
+		sf::FloatRect GetRect() override { return GetSpriteRect(); }
 	private:
-		sf::Sprite sprite;
-		sf::Texture texture;
-
+		void OnHit() override;
 		sf::Vector2f direction;
+		float lastAngle = 90;
 	};
 }

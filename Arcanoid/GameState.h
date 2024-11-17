@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <utility>
+#include "GameStateData.h"
 
 namespace Arcanoid
 {
@@ -28,7 +28,7 @@ namespace Arcanoid
 		GameState& operator= (GameState&& state) noexcept
 		{
 			type = state.type;
-			data = state.data;
+			data = std::move(state.data);
 			state.data = nullptr;
 			return *this;
 		}
@@ -40,13 +40,12 @@ namespace Arcanoid
 		{
 			return static_cast<T>(data);
 		}
-
 		void Update(float timeDelta);
 		void Draw(sf::RenderWindow& window);
 		void HandleWindowEvent(sf::Event& event);
 
 	private:
 		GameStateType type = GameStateType::None;
-		void* data = nullptr;
+		std::unique_ptr<GameStateData> data = nullptr;
 	};
 }

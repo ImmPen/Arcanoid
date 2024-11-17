@@ -1,4 +1,6 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+
 namespace Arcanoid
 {
 	const std::string RESOURCES_PATH = "./Resourses/";
@@ -14,7 +16,14 @@ namespace Arcanoid
 	const int PLATFORM_WIDTH = 48;
 	const int PLATFORM_HEIGHT = 14;
 	const int BALL_SIZE = 12;
+	const int BLOCK_WIDTH = 32;
+	const int BLOCK_HEIGHT = 16;
 
-	const sf::IntRect PLATFORM_RECT_IN_TEXTURE = sf::IntRect(32, 64, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-	const sf::IntRect BALL_RECT_IN_TEXTURE = sf::IntRect(50, 34, BALL_SIZE, BALL_SIZE);
+	const float BREAK_TIME = 1.f;
+	const int BREAK_FRAMES_COUNT = 12;
+	const float TIME_ON_FRAME = BREAK_TIME / (float)BREAK_FRAMES_COUNT;
+
+	const sf::IntRect PLATFORM_RECT_IN_TEXTURE = sf::IntRect(32, 64, 48, 14);
+	const sf::IntRect BALL_RECT_IN_TEXTURE = sf::IntRect(50, 34, 12, 12);
+	const sf::IntRect BLOCK_RECT_IN_TEXTURE = sf::IntRect(32, 176, 32, 16);
 }
