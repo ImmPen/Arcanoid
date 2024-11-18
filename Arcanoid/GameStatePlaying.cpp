@@ -50,7 +50,7 @@ namespace Arcanoid
 				}
 				return block->IsBroken();
 			}
-			)
+			), blocks.end()
 		);
 
 		if (isNeedInverseX)
@@ -67,21 +67,18 @@ namespace Arcanoid
 		Game& game = Application::Instance().GetGame();
 		if (isGameWin)
 		{
-
+			game.PushState(GameStateType::Win);
 		}
 		else if (isGameOver)
 		{
 			game.PushState(GameStateType::GameOver);
+			game.GetSoundManager().PlaySound(Sounds::gameOverSound);
 		}
 
 	}
 
 	void GameStatePlayingData::Draw(sf::RenderWindow& window)
 	{
-		for (auto&& object : gameObjects)
-		{
-			object->Draw(window);
-		}
 		static auto drawFunc = [&window](auto element) { element->Draw(window); };
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunc);
 		std::for_each(blocks.begin(), blocks.end(), drawFunc);
@@ -89,12 +86,12 @@ namespace Arcanoid
 
 	void GameStatePlayingData::CreateBlocks()
 	{
-		for (int row = 0; row < 10; row++)
+		for (int row = 0; row < 3; row++)
 		{
-			for (int col = 0; col < 3; col++)
+			for (int col = 0; col < 10; col++)
 			{
 				blocks.emplace_back(std::make_shared<SmoothDestroyableBlock>(
-					sf::Vector2f({ col * BLOCK_WIDTH, 100 + row * BLOCK_HEIGHT }),
+					sf::Vector2f({ static_cast<float>(col * BLOCK_WIDTH + BLOCK_WIDTH / 2),  static_cast<float>(100 + row * BLOCK_HEIGHT) }),
 					rand() % 6));
 			}
 		}
@@ -103,10 +100,6 @@ namespace Arcanoid
 	void GameStatePlayingData::GetBallInverse(const sf::Vector2f& ballPosition, const sf::FloatRect& blockRect, bool& isNeedInverseDirectionX, bool& isNeedInverseDirectionY)
 	{
 		if (ballPosition.y > blockRect.top + blockRect.height)
-		{
-			isNeedInverseDirectionY = true;
-		}
-		if (ballPosition.y < blockRect.top)
 		{
 			isNeedInverseDirectionY = true;
 		}

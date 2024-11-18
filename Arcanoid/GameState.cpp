@@ -4,6 +4,7 @@
 #include "GameStateMainMenu.h"
 #include "GameStatePause.h"
 #include "GameStateRecords.h"
+#include "GameStateWin.h"
 
 namespace Arcanoid
 {
@@ -26,6 +27,9 @@ namespace Arcanoid
 			break;
 		case GameStateType::Records:
 			this->data = std::make_unique<GameStateRecordsData>();
+			break;
+		case GameStateType::Win:
+			this->data = std::make_unique<GameStateWinData>();
 			break;
 		default:
 			break;

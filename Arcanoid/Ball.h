@@ -8,7 +8,7 @@ namespace Arcanoid
 	class Ball : public GameObject, public ICollidable
 	{
 	public:
-		Ball(sf::Vector2f& position);
+		Ball(const sf::Vector2f& position);
 		~Ball() override = default;
 
 		void Update(float timeDelta) override;

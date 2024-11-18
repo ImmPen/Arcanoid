@@ -6,7 +6,7 @@
 
 namespace Arcanoid
 {
-	Ball::Ball(sf::Vector2f& position)
+	Ball::Ball(const sf::Vector2f& position)
 		: GameObject(
 			RESOURCES_PATH + "spritesheet-breakout.png",
 			BALL_RECT_IN_TEXTURE,

@@ -4,7 +4,7 @@
 
 namespace Arcanoid
 {
-	GameObject::GameObject(std::string& texture, sf::IntRect& rectInTexture, sf::Vector2f& position, int desiredWidth, int desiredHeight)
+	GameObject::GameObject(const std::string& texture, const sf::IntRect& rectInTexture, const sf::Vector2f& position, int desiredWidth, int desiredHeight)
 	{
 		assert(this->texture.loadFromFile(texture, rectInTexture));
 

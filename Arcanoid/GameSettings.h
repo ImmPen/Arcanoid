@@ -19,6 +19,10 @@ namespace Arcanoid
 	const int BLOCK_WIDTH = 32;
 	const int BLOCK_HEIGHT = 16;
 
+	const int BLOCK_WIDTH_ON_TILESET = 32;
+	const int BLOCK_HEIGHT_ON_TILESET = 16;
+	const int NUM_COLORS = 6;
+
 	const float BREAK_TIME = 1.f;
 	const int BREAK_FRAMES_COUNT = 12;
 	const float TIME_ON_FRAME = BREAK_TIME / (float)BREAK_FRAMES_COUNT;

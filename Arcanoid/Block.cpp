@@ -20,9 +20,9 @@ namespace Arcanoid
 			BLOCK_HEIGHT)
 	{
 		auto rect = BLOCK_RECT_IN_TEXTURE;
-		this->color = color % 6;
-		rect.top = BLOCK_RECT_IN_TEXTURE.top + this->color * 16;
-		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png"));
+		this->color = color % NUM_COLORS;
+		rect.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
+		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rect));
 	}
 
 	void Block::Update(float timeDelta)
@@ -30,7 +30,7 @@ namespace Arcanoid
 
 	}
 
-	bool Block::GetCollision(std::shared_ptr<ICollidable> collidableObject)
+	bool Block::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
 	{
 		return GetSpriteRect().intersects(collidableObject->GetRect());
 	}
@@ -68,7 +68,7 @@ namespace Arcanoid
 		UpdateTimer(deltaTime);
 	}
 
-	bool SmoothDestroyableBlock::GetCollision(std::shared_ptr<ICollidable> collidableObject)
+	bool SmoothDestroyableBlock::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
 	{
 		if (isTimerStarted)
 		{
@@ -82,8 +82,9 @@ namespace Arcanoid
 		const float timeSinceStartedAnimation = destroyTime - currentTime;
 		const int currentFrame = static_cast<int>(timeSinceStartedAnimation / TIME_ON_FRAME);
 		sf::IntRect rectOnTileSet = BLOCK_RECT_IN_TEXTURE;
-		rectOnTileSet.top = BLOCK_RECT_IN_TEXTURE.top + this->color * 16;
-		rectOnTileSet.left = BLOCK_RECT_IN_TEXTURE.left + currentFrame;
+		rectOnTileSet.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
+		rectOnTileSet.left = BLOCK_RECT_IN_TEXTURE.left + currentFrame * BLOCK_WIDTH_ON_TILESET;
+		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rectOnTileSet));
 	}
 
 }

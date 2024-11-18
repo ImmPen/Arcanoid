@@ -6,7 +6,7 @@ namespace Arcanoid
 	{
 	public:
 		virtual ~GameObject() = default;
-		GameObject(std::string& texture, sf::IntRect& rectInTexture, sf::Vector2f& position, int desiredWidth, int desiredHeight);
+		GameObject(const std::string& texture, const sf::IntRect& rectInTexture, const sf::Vector2f& position, int desiredWidth, int desiredHeight);
 		virtual void Update(float timeDelta) = 0;
 		virtual void Draw(sf::RenderWindow& window);
 

@@ -146,6 +146,7 @@
     <ClInclude Include="GameStatePlaying.h" />
     <ClInclude Include="GameStateRecords.h" />
     <ClInclude Include="Collidable.h" />
+    <ClInclude Include="GameStateWin.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="SoundManager.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="GameStatePause.cpp" />
     <ClCompile Include="GameStatePlaying.cpp" />
     <ClCompile Include="GameStateRecords.cpp" />
+    <ClCompile Include="GameStateWin.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Platform.cpp" />

@@ -16,7 +16,8 @@ namespace Arcanoid
 		Block(const sf::Vector2f& position, const int color);
 		~Block() override = default;
 		void Update(float timeDelta) override;
-		bool GetCollision(std::shared_ptr<ICollidable> collidableObject);
+		bool GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
+		sf::FloatRect GetRect() override { return GetSpriteRect(); }
 		virtual bool IsBroken();
 	};
 
@@ -31,10 +32,8 @@ namespace Arcanoid
 		~SmoothDestroyableBlock() override = default;
 
 		void Update(float deltaTime) override;
-		bool GetCollision(std::shared_ptr<ICollidable> collidableObject);
-		sf::FloatRect GetRect() override { return GetSpriteRect(); }
+		bool GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 
 		void EachTickAction(float deltaTime) override;
-
 	};
 }

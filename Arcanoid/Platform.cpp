@@ -3,10 +3,11 @@
 #include "GameSettings.h"
 #include "Sprite.h"
 #include <algorithm>
+#include "Application.h"
 
 namespace Arcanoid
 {
-	Platform::Platform(sf::Vector2f& position)
+	Platform::Platform(const sf::Vector2f& position)
 		: GameObject(
 			RESOURCES_PATH + "spritesheet-breakout.png",
 			PLATFORM_RECT_IN_TEXTURE,
@@ -39,6 +40,7 @@ namespace Arcanoid
 			auto rect = this->GetRect();
 			auto ballPosOnPlatform = (ball->GetPosition().x - (rect.left + rect.width / 2)) / (rect.width / 2);
 			ball->ChangeAngle(90 - 20 * ballPosOnPlatform);
+			Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::reboundSound);
 			return true;
 		}
 		return	false;

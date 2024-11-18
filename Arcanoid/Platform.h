@@ -9,7 +9,7 @@ namespace Arcanoid
 	class Platform : public GameObject, public ICollidable
 	{
 	public:
-		Platform(sf::Vector2f& position);
+		Platform(const sf::Vector2f& position);
 		~Platform() override = default;
 		void Update(float timeDelta) override;
 
