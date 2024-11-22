@@ -24,24 +24,22 @@ namespace Arcanoid
 		this->sprite.setPosition(pos);
 
 		if (pos.x - BALL_SIZE / 2 <= 0 || pos.x + BALL_SIZE / 2 >= SCREEN_WIDTH) {
-			direction.x *= -1;
+			InvertDirectionX();
 		}
 
 		if (pos.y - BALL_SIZE / 2 <= 0 || pos.y + BALL_SIZE / 2 >= SCREEN_HEIGHT) {
-			direction.y *= -1;
+			InvertDirectionY();
 		}
 	}
 
 	void Ball::InvertDirectionX()
 	{
 		ChangeAngle(180 - lastAngle);
-		//this->direction.x *= -1;
 	}
 
 	void Ball::InvertDirectionY()
 	{
 		ChangeAngle(-lastAngle);
-		//this->direction.y *= -1;
 	}
 
 	CollisionType Ball::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
