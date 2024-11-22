@@ -27,6 +27,8 @@ namespace Arcanoid
 	const int BREAK_FRAMES_COUNT = 12;
 	const float TIME_ON_FRAME = BREAK_TIME / (float)BREAK_FRAMES_COUNT;
 
+	const int MAX_DURABILITY = 3;
+
 	const sf::IntRect PLATFORM_RECT_IN_TEXTURE = sf::IntRect(32, 64, 48, 14);
 	const sf::IntRect BALL_RECT_IN_TEXTURE = sf::IntRect(50, 34, 12, 12);
 	const sf::IntRect BLOCK_RECT_IN_TEXTURE = sf::IntRect(32, 176, 32, 16);

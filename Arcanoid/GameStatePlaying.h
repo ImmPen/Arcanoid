@@ -16,6 +16,7 @@ namespace Arcanoid
 		void Draw(sf::RenderWindow& window) override;
 	private:
 		void CreateBlocks();
+		bool IsWinCondition();
 		void GetBallInverse(
 			const sf::Vector2f& ballPosition,
 			const sf::FloatRect& blockRect,

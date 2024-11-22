@@ -35,23 +35,24 @@ namespace Arcanoid
 		{
 			return false;
 		}
-		if (GetCollision(ball))
+		if (GetCollision(ball) != CollisionType::None)
 		{
 			auto rect = this->GetRect();
 			auto ballPosOnPlatform = (ball->GetPosition().x - (rect.left + rect.width / 2)) / (rect.width / 2);
 			ball->ChangeAngle(90 - 20 * ballPosOnPlatform);
+			ICollidable::CheckCollision(collidable);
 			Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::reboundSound);
 			return true;
 		}
 		return	false;
 	}
 
-	bool Platform::GetCollision(std::shared_ptr<ICollidable> collidable) const
+	CollisionType Platform::GetCollision(std::shared_ptr<ICollidable> collidable) const
 	{
 		auto ball = std::static_pointer_cast<Ball>(collidable);
 		if (!ball)
 		{
-			return false;
+			return CollisionType::None;
 		}
 		auto sqr = [](float x) {
 			return x * x;
@@ -61,13 +62,16 @@ namespace Arcanoid
 		const auto ballPos = ball->GetPosition();
 
 		if (ballPos.x < rect.left) {
-			return sqr(ballPos.x - rect.left) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0);
+			return sqr(ballPos.x - rect.left) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0) 
+				? CollisionType::Hit : CollisionType::None;
 		}
 
 		if (ballPos.x > rect.left + rect.width) {
-			return sqr(ballPos.x - rect.left - rect.width) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0);
+			return sqr(ballPos.x - rect.left - rect.width) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0)
+				? CollisionType::Hit : CollisionType::None;
 		}
-		return std::fabs(ballPos.y - rect.top) <= BALL_SIZE / 2.0;
+		return std::fabs(ballPos.y - rect.top) <= BALL_SIZE / 2.0
+			? CollisionType::Hit : CollisionType::None;
 	}
 
 	void Platform::Move(float speed)

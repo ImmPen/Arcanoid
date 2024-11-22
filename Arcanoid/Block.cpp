@@ -6,9 +6,12 @@
 
 namespace Arcanoid
 {
-	void Block::OnHit()
+	void Block::OnHit(CollisionType type)
 	{
-		this->hitCount -= hitDecrease;
+		if (type != CollisionType::None)
+		{
+			this->hitCount -= hitDecrease;
+		}	
 	}
 
 	Block::Block(const sf::Vector2f& position, const int color)
@@ -20,7 +23,7 @@ namespace Arcanoid
 			BLOCK_HEIGHT)
 	{
 		auto rect = BLOCK_RECT_IN_TEXTURE;
-		this->color = color % NUM_COLORS;
+		this->color = color;
 		rect.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
 		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rect));
 	}
@@ -30,29 +33,24 @@ namespace Arcanoid
 
 	}
 
-	bool Block::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
+	CollisionType Block::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
 	{
-		return GetSpriteRect().intersects(collidableObject->GetRect());
+		return GetSpriteRect().intersects(collidableObject->GetRect()) ? CollisionType::Hit : CollisionType::None;
 	}
 
-	bool Block::IsBroken()
+	bool Block::IsBroken() const
 	{
 		return this->hitCount <= 0;
 	}
 
 
-	void SmoothDestroyableBlock::OnHit()
+	void SmoothDestroyableBlock::OnHit(CollisionType type)
 	{
-		Super::OnHit();
+		Super::OnHit(type);
 		if (this->hitCount <= 0)
 		{
 			StartTimer(BREAK_TIME);
 		}
-	}
-
-	bool SmoothDestroyableBlock::IsBroken()
-	{
-		return (Super::IsBroken() && !this->isTimerStarted);
 	}
 
 	SmoothDestroyableBlock::SmoothDestroyableBlock(const sf::Vector2f& position, const int color)
@@ -68,13 +66,18 @@ namespace Arcanoid
 		UpdateTimer(deltaTime);
 	}
 
-	bool SmoothDestroyableBlock::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
+	CollisionType SmoothDestroyableBlock::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
 	{
-		if (isTimerStarted)
+		if (isTimerStarted || IsBroken())
 		{
-			return false;
+			return CollisionType::None;
 		}
 		return Super::GetCollision(collidableObject);
+	}
+
+	bool SmoothDestroyableBlock::IsBroken() const
+	{
+		return Super::IsBroken() && (!isTimerStarted);
 	}
 
 	void SmoothDestroyableBlock::EachTickAction(float deltaTime)
@@ -87,4 +90,9 @@ namespace Arcanoid
 		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rectOnTileSet));
 	}
 
+	UnbreakableBlock::UnbreakableBlock(const sf::Vector2f& position)
+		: Block(position, 7)
+	{
+		hitDecrease = 0;
+	}
 }

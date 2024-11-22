@@ -34,31 +34,38 @@ namespace Arcanoid
 
 	void Ball::InvertDirectionX()
 	{
-		this->direction.x *= -1;
+		ChangeAngle(180 - lastAngle);
+		//this->direction.x *= -1;
 	}
 
 	void Ball::InvertDirectionY()
 	{
-		this->direction.y *= -1;
+		ChangeAngle(-lastAngle);
+		//this->direction.y *= -1;
 	}
 
-	bool Ball::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
+	CollisionType Ball::GetCollision(std::shared_ptr<ICollidable> collidableObject) const
 	{
-		return GetSpriteRect().intersects(collidableObject->GetRect());
+		return GetSpriteRect().intersects(collidableObject->GetRect()) ? CollisionType::Hit : CollisionType::None;
 	}
 
 	void Ball::ChangeAngle(float angle)
 	{
 		lastAngle = angle;
-		direction.x = (angle / abs(angle)) * std::cos(std::numbers::pi / 180 * angle);
-		direction.y = -1 * abs(std::sin(std::numbers::pi / 180 * angle));
+		lastAngle = lastAngle > 180 ? lastAngle - 360 : lastAngle;
+		lastAngle = lastAngle < -180 ? lastAngle + 360 : lastAngle;
+		this->direction.x = std::cos(std::numbers::pi * lastAngle / 180);
+		this->direction.y = -1 * std::sin(std::numbers::pi * lastAngle / 180);
 	}
 
-	void Ball::OnHit()
+	void Ball::OnHit(CollisionType type)
 	{
-		const float lower = -5.f;
-		const float higher = 5.f;
-		lastAngle += lower + static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (higher - lower));
-		ChangeAngle(lastAngle);
+		if (type != CollisionType::None)
+		{
+			const float lower = -5.f;
+			const float higher = 5.f;
+			lastAngle += lower + (rand()) / (RAND_MAX / static_cast<float>(higher - lower));
+			ChangeAngle(lastAngle);
+		}
 	}
 }

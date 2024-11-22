@@ -3,22 +3,29 @@
 
 namespace Arcanoid
 {
+	enum class CollisionType
+	{
+		None,
+		Hit,
+		Overlap
+	};
 	class ICollidable
 	{
 	protected:
-		virtual void OnHit() = 0;
+		virtual void OnHit(CollisionType collisionType) = 0;
 	public:
 		virtual bool CheckCollision(std::shared_ptr<ICollidable> collidable)
 		{
-			if (GetCollision(collidable))
+			auto collisionType = GetCollision(collidable);
+			if (collisionType != CollisionType::None)
 			{
-				OnHit();
-				collidable->OnHit();
+				OnHit(collisionType);
+				collidable->OnHit(collisionType);
 				return true;
 			}
 			return false;
 		}
-		virtual bool GetCollision(std::shared_ptr<ICollidable> collidable) const = 0;
+		virtual CollisionType GetCollision(std::shared_ptr<ICollidable> collidable) const = 0;
 		virtual sf::FloatRect GetRect() = 0;
 	};
 }

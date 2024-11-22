@@ -13,10 +13,10 @@ namespace Arcanoid
 		~Platform() override = default;
 		void Update(float timeDelta) override;
 
-		void OnHit() override {}
+		void OnHit(CollisionType type) override {}
 		bool CheckCollision(std::shared_ptr<ICollidable> collidable) override;
 		
-		bool GetCollision(std::shared_ptr<ICollidable> collidable) const override;
+		CollisionType GetCollision(std::shared_ptr<ICollidable> collidable) const override;
 
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
 	private:

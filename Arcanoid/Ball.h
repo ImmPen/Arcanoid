@@ -16,13 +16,13 @@ namespace Arcanoid
 		void InvertDirectionX();
 		void InvertDirectionY();
 
-		bool GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
+		CollisionType GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 		void ChangeAngle(float angle);
 
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
 	private:
-		void OnHit() override;
+		void OnHit(CollisionType type) override;
 		sf::Vector2f direction;
-		float lastAngle = 90;
+		float lastAngle = 90; // [-180; 180] degrees
 	};
 }
