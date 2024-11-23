@@ -158,10 +158,10 @@ namespace Arcanoid
 		{
 			isNeedInverseDirectionY = true;
 		}
-		/*if (ballPosition.y < blockRect.top)
+		if (ballPosition.y < blockRect.top)
 		{
 			isNeedInverseDirectionY = true;
-		}*/
+		}
 		if (ballPosition.x > blockRect.left + blockRect.width)
 		{
 			isNeedInverseDirectionX = true;
