@@ -4,17 +4,21 @@
 namespace Arcanoid
 {
 	MultipleHitBlock::MultipleHitBlock(const sf::Vector2f& position, int durability)
-		:Block(position, 7)
+		:Block(position, BlockTypeToColorNum(BlockType::MultipleHit))
 	{
-		auto rect = BLOCK_RECT_IN_TEXTURE;
-		rect.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
-		rect.left = BLOCK_RECT_IN_TEXTURE.left + BLOCK_WIDTH_ON_TILESET;
-		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rect));
+		auto rect = SETTINGS.BLOCK_RECT_IN_TEXTURE;
+		rect.top = SETTINGS.BLOCK_RECT_IN_TEXTURE.top + this->color * SETTINGS.BLOCK_HEIGHT_ON_TILESET;
+		rect.left = SETTINGS.BLOCK_RECT_IN_TEXTURE.left + SETTINGS.BLOCK_WIDTH_ON_TILESET;
+		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png", rect));
 		this->hitCount = durability;
+	}
+	MultipleHitBlock::MultipleHitBlock(const sf::Vector2f& position) 
+		: MultipleHitBlock(position, 3)
+	{
 	}
 	void MultipleHitBlock::StageChange()
 	{
-		this->sprite.setColor(sf::Color(255, 255, 255, (int)(this->hitCount / (float)MAX_DURABILITY * 255)));
+		this->sprite.setColor(sf::Color(255, 255, 255, (int)(this->hitCount / (float)SETTINGS.MAX_DURABILITY * 255)));
 	}
 	void MultipleHitBlock::OnHit(CollisionType type)
 	{
@@ -22,7 +26,7 @@ namespace Arcanoid
 		StageChange();
 	}
 	GlassBlock::GlassBlock(const sf::Vector2f& position)
-		: Block(position, 6)
+		: Block(position, BlockTypeToColorNum(BlockType::Glass))
 	{
 
 	}

@@ -2,11 +2,13 @@
 #include "Block.h"
 namespace Arcanoid
 {
-	class MultipleHitBlock : public Block
+	class MultipleHitBlock 
+		: public Block
 	{
 		using Super = Block;
 	public:
 		MultipleHitBlock(const sf::Vector2f& position, int durability);
+		MultipleHitBlock(const sf::Vector2f& position);
 		~MultipleHitBlock() override = default;
 		void StageChange();
 	private:

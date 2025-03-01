@@ -9,10 +9,10 @@ namespace Arcanoid
 {
 	Platform::Platform(const sf::Vector2f& position)
 		: GameObject(
-			RESOURCES_PATH + "spritesheet-breakout.png",
-			PLATFORM_RECT_IN_TEXTURE,
+			SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png",
+			SETTINGS.PLATFORM_RECT_IN_TEXTURE,
 			position,
-			PLATFORM_WIDTH, PLATFORM_HEIGHT)
+			SETTINGS.PLATFORM_WIDTH, SETTINGS.PLATFORM_HEIGHT)
 	{
 
 	}
@@ -20,11 +20,11 @@ namespace Arcanoid
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
-			this->Move(-timeDelta * PLATFORM_SPEED);
+			this->Move(-timeDelta * SETTINGS.PLATFORM_SPEED);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			this->Move(timeDelta * PLATFORM_SPEED);
+			this->Move(timeDelta * SETTINGS.PLATFORM_SPEED);
 		}
 	}
 
@@ -62,22 +62,24 @@ namespace Arcanoid
 		const auto ballPos = ball->GetPosition();
 
 		if (ballPos.x < rect.left) {
-			return sqr(ballPos.x - rect.left) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0) 
+			return sqr(ballPos.x - rect.left) + sqr(ballPos.y - rect.top) < sqr(SETTINGS.BALL_SIZE / 2.0)
 				? CollisionType::Hit : CollisionType::None;
 		}
 
 		if (ballPos.x > rect.left + rect.width) {
-			return sqr(ballPos.x - rect.left - rect.width) + sqr(ballPos.y - rect.top) < sqr(BALL_SIZE / 2.0)
+			return sqr(ballPos.x - rect.left - rect.width) + sqr(ballPos.y - rect.top) < sqr(SETTINGS.BALL_SIZE / 2.0)
 				? CollisionType::Hit : CollisionType::None;
 		}
-		return std::fabs(ballPos.y - rect.top) <= BALL_SIZE / 2.0
+		return std::fabs(ballPos.y - rect.top) <= SETTINGS.BALL_SIZE / 2.0
 			? CollisionType::Hit : CollisionType::None;
 	}
 
 	void Platform::Move(float speed)
 	{
 		auto positon = this->sprite.getPosition();
-		positon.x = std::clamp(positon.x + speed, PLATFORM_WIDTH / 2.f, SCREEN_WIDTH - PLATFORM_WIDTH / 2.f);
+		positon.x = std::clamp(positon.x + speed,
+			SETTINGS.PLATFORM_WIDTH / 2.f,
+			SETTINGS.SCREEN_WIDTH - SETTINGS.PLATFORM_WIDTH / 2.f);
 		sprite.setPosition(positon);
 	}
 }

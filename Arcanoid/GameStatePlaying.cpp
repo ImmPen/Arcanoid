@@ -10,9 +10,19 @@ namespace Arcanoid
 {
 	void GameStatePlayingData::Init()
 	{
-		assert(this->font.loadFromFile(RESOURCES_PATH + "Fonts/arial.ttf"));
-		gameObjects.emplace_back(std::make_shared<Platform>(sf::Vector2f({ SCREEN_WIDTH / 2, SCREEN_HEIGHT - PLATFORM_HEIGHT / 2 })));
-		gameObjects.emplace_back(std::make_shared<Ball>(sf::Vector2f({ SCREEN_WIDTH / 2, SCREEN_HEIGHT - PLATFORM_HEIGHT - BALL_SIZE / 2 })));
+		currentLevel = 0;
+		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
+		gameObjects.emplace_back(std::make_shared<Platform>(
+			sf::Vector2f({
+				static_cast<float>(SETTINGS.SCREEN_WIDTH / 2),
+				static_cast<float>(SETTINGS.SCREEN_HEIGHT - SETTINGS.PLATFORM_HEIGHT / 2) })));
+		auto ball = std::make_shared<Ball>(sf::Vector2f({ SETTINGS.SCREEN_WIDTH / 2.f, SETTINGS.SCREEN_HEIGHT - SETTINGS.PLATFORM_HEIGHT - SETTINGS.BALL_SIZE / 2.f }));
+		ball->AddObserver(weak_from_this());
+		gameObjects.emplace_back(ball);
+		this->factories.emplace(BlockType::Animated, std::make_unique<AnimatedBlockFactory>());
+		this->factories.emplace(BlockType::Unbreakable, std::make_unique<UnbreakableBlockFactory>());
+		this->factories.emplace(BlockType::MultipleHit, std::make_unique<MultipleHitBlockFactory>());
+		this->factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
 		CreateBlocks();
 	}
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
@@ -21,7 +31,7 @@ namespace Arcanoid
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().PushState(GameStateType::Pause);
+				Application::Instance().GetGame().PauseGame();
 			}
 		}
 	}
@@ -67,19 +77,6 @@ namespace Arcanoid
 			ball->InvertDirectionY();
 		}
 		auto isCollision = platform->CheckCollision(ball);
-		const bool isGameWin = this->IsWinCondition();
-		const bool isGameOver = !isCollision && ball->GetPosition().y > platform->GetRect().top;
-		Game& game = Application::Instance().GetGame();
-		if (isGameWin)
-		{
-			game.PushState(GameStateType::Win);
-		}
-		else if (isGameOver)
-		{
-			game.PushState(GameStateType::GameOver);
-			game.GetSoundManager().PlaySound(Sounds::gameOverSound);
-		}
-
 	}
 
 	void GameStatePlayingData::Draw(sf::RenderWindow& window)
@@ -89,49 +86,62 @@ namespace Arcanoid
 		std::for_each(blocks.begin(), blocks.end(), drawFunc);
 	}
 
+	void GameStatePlayingData::LoadNextLevel()
+	{
+		if (currentLevel >= levelLoader.GetLevelCount() - 1) {
+			Game& game = Application::Instance().GetGame();
+			game.WinGame();
+		}
+		else
+		{
+			std::shared_ptr <Platform> platform = std::dynamic_pointer_cast<Platform>(gameObjects[0]);
+			std::shared_ptr<Ball> ball = std::dynamic_pointer_cast<Ball>(gameObjects[1]);
+			platform->Restart();
+			ball->Restart();
+
+			blocks.clear();
+			++currentLevel;
+			CreateBlocks();
+		}
+	}
+
+	void GameStatePlayingData::Notify(std::shared_ptr<IObservable> observable)
+	{
+		Game& game = Application::Instance().GetGame();
+		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {			
+			if (IsWinCondition()) {
+				game.LoadNextLevel();
+			}
+		}
+		else if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
+		{
+			if (ball->GetPosition().y > gameObjects.front()->GetSpriteRect().top) {
+				game.GetSoundManager().PlaySound(Sounds::gameOverSound);
+				game.LoseGame();
+			}
+		}
+	}
+
 	void GameStatePlayingData::CreateBlocks()
 	{
-		for (int row = 0; row < 3; row++)
+		auto self = weak_from_this();
+
+		/*for (const auto& pair : factories)
 		{
-			for (int col = 0; col < 10; col++)
-			{
-				blocks.emplace_back(std::make_shared<SmoothDestroyableBlock>(
-					sf::Vector2f(
-						{ static_cast<float>(col * BLOCK_WIDTH + BLOCK_WIDTH / 2), 
-						static_cast<float>(100 + row * BLOCK_HEIGHT) }),
-					rand() % 6));
-			}
-		}
-		for (int row = 3; row < 4; row++)
+			pair.second->ClearCounter();
+		}*/
+		auto& level = levelLoader.GetLevel(currentLevel);
+		for (auto block : level.blocks)
 		{
-			for (int col = 0; col < 3; col++)
-			{
-				blocks.emplace_back(std::make_shared<UnbreakableBlock>
-					(sf::Vector2f(
-						{ static_cast<float>(col * BLOCK_WIDTH + BLOCK_WIDTH / 2),
-						static_cast<float>(100 + row * BLOCK_HEIGHT) })));
-			}
-		}
-		for (int row = 3; row < 4; row++)
-		{
-			for (int col = 3; col < 7; col++)
-			{
-				blocks.emplace_back(std::make_shared<GlassBlock>
-					(sf::Vector2f(
-						{ static_cast<float>(col * BLOCK_WIDTH + BLOCK_WIDTH / 2), 
-						static_cast<float>(100 + row * BLOCK_HEIGHT) })));
-			}
-		}
-		for (int row = 3; row < 4; row++)
-		{
-			for (int col = 7; col < 10; col++)
-			{
-				blocks.emplace_back(std::make_shared<MultipleHitBlock>
-					(sf::Vector2f(
-						{ static_cast<float>(col * BLOCK_WIDTH + BLOCK_WIDTH / 2),
-						static_cast<float>(100 + row * BLOCK_HEIGHT) }), 
-						MAX_DURABILITY));
-			}	
+			auto blockType = block.second;
+			auto blockPostion = block.first;
+
+			sf::Vector2f position{
+				(float)(SETTINGS.BLOCK_WIDTH / 2 + blockPostion.x * SETTINGS.BLOCK_WIDTH),
+				(float)(blockPostion.y * SETTINGS.BLOCK_HEIGHT)
+			};
+			blocks.emplace_back(factories.at(blockType)->CreateBlock(position));
+			blocks.back()->AddObserver(self);
 		}
 	}
 
@@ -140,7 +150,8 @@ namespace Arcanoid
 		for (auto element : blocks)
 		{
 			auto isUnbreakable = std::dynamic_pointer_cast<UnbreakableBlock>(element);
-			if (!isUnbreakable)
+			auto isBroken = element->IsBroken();
+			if (!isUnbreakable && !isBroken)
 			{
 				return false;
 			}

@@ -2,12 +2,22 @@
 #include "GameObject.h"
 #include "Collidable.h"
 #include "DelayedAction.h"
+#include "IObserver.h"
 
 namespace Arcanoid
 {
-	class Block : public GameObject, public ICollidable
+	enum class BlockType
+	{
+		Animated,
+		Unbreakable,
+		MultipleHit,
+		Glass
+	};
+
+	class Block : public GameObject, public ICollidable, public IObservable
 	{
 	protected:
+		static int const BlockTypeToColorNum(BlockType type);
 		void OnHit(CollisionType type) override;
 		int hitCount = 1;
 		int hitDecrease = 1;
@@ -28,6 +38,7 @@ namespace Arcanoid
 		void OnHit(CollisionType type) override;
 	public:
 		SmoothDestroyableBlock(const sf::Vector2f& position, const int color);
+		SmoothDestroyableBlock(const sf::Vector2f& position);
 		~SmoothDestroyableBlock() override = default;
 
 		void Update(float deltaTime) override;
@@ -35,6 +46,7 @@ namespace Arcanoid
 		bool IsBroken() const override;
 
 		void EachTickAction(float deltaTime) override;
+		void UpdateTimer(float deltaTime) override;
 	};
 
 	class UnbreakableBlock : public Block

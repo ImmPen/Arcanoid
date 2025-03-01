@@ -7,10 +7,10 @@ namespace Arcanoid
 {
 	SoundManager::SoundManager()
 	{
-		std::string musicPath = RESOURCES_PATH + "Clinthammer__Background_Music.wav";
-		std::string reboundSoundPath = RESOURCES_PATH + "Owlstorm__Snake_hit.wav";
-		std::string gameOverSoundPath = RESOURCES_PATH + "Maodin204__Lose.wav";
-		std::string menuHoverSoundPath = RESOURCES_PATH + "Theevilsocks__menu-hover.wav";
+		std::string musicPath = SETTINGS.RESOURCES_PATH + "Clinthammer__Background_Music.wav";
+		std::string reboundSoundPath = SETTINGS.RESOURCES_PATH + "Owlstorm__Snake_hit.wav";
+		std::string gameOverSoundPath = SETTINGS.RESOURCES_PATH + "Maodin204__Lose.wav";
+		std::string menuHoverSoundPath = SETTINGS.RESOURCES_PATH + "Theevilsocks__menu-hover.wav";
 		assert(this->music.openFromFile(musicPath));
 		assert(this->gameOverBuffer.loadFromFile(gameOverSoundPath));
 		assert(this->reboundBuffer.loadFromFile(reboundSoundPath));

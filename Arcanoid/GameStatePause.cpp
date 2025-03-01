@@ -8,14 +8,14 @@ namespace Arcanoid
 {
 	void GameStatePauseData::Init()
 	{
-		assert(this->font.loadFromFile(RESOURCES_PATH + "Fonts/arial.ttf"));
+		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
 
 		MenuItem yesItem;
 		yesItem.text.setString("Yes");
 		yesItem.text.setFont(this->font);
 		yesItem.text.setCharacterSize(24);
 		yesItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+			Application::Instance().GetGame().ExitGame();
 			};
 
 		MenuItem noItem;

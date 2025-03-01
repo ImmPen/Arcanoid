@@ -7,14 +7,14 @@ namespace Arcanoid
 {
 	void GameStateGameOverData::Init()
 	{
-		assert(this->font.loadFromFile(RESOURCES_PATH + "Fonts/arial.ttf"));
+		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
 
 		MenuItem newGameItem;
 		newGameItem.text.setString("Start new game");
 		newGameItem.text.setFont(this->font);
 		newGameItem.text.setCharacterSize(24);
 		newGameItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
+			Application::Instance().GetGame().StartGame();
 			};
 
 		MenuItem mainMenuItem;
@@ -22,7 +22,7 @@ namespace Arcanoid
 		mainMenuItem.text.setFont(this->font);
 		mainMenuItem.text.setCharacterSize(24);
 		mainMenuItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+			Application::Instance().GetGame().ExitGame();
 			};
 
 		MenuItem gameOverMenu;
@@ -40,7 +40,7 @@ namespace Arcanoid
 		
 		int i = 0;
 		auto recordsTable = Application::Instance().GetGame().GetRecordsTable();
-		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < NUM_RECORDS_IN_TABLE; it++, i++)
+		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->recordsTableTexts.emplace_back();
 			sf::Text& text = this->recordsTableTexts.back();
@@ -59,7 +59,7 @@ namespace Arcanoid
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+				Application::Instance().GetGame().ExitGame();
 			}
 			else if (event.key.code == sf::Keyboard::Enter)
 			{

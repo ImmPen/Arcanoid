@@ -30,22 +30,35 @@ namespace Arcanoid
 	public:
 		Game();
 		~Game();
+		
+		bool IsEnableOptions(GameOptions option) const;
+		void SetOption(GameOptions option, bool value);
+
+		std::vector<int> GetRecordsTable() const;
+		SoundManager& GetSoundManager() { return this->soundManager; }
+
+		void StartGame();
+		void PauseGame();
+		void WinGame();
+		void LoseGame();
+		void UpdateGame(float timeDelta, sf::RenderWindow& window);
+		void ExitGame();
+		void QuitGame();
+		void ShowRecords();
+		void LoadNextLevel();
+
+		void PopState();
+		
+	private:
+
 		void HandleWindowEvents(sf::RenderWindow& window);
 		bool Update(float timer);
 		void Draw(sf::RenderWindow& window);
 		void Shutdown();
 
-		bool IsEnableOptions(GameOptions option) const;
-		void SetOption(GameOptions option, bool value);
-
 		void PushState(GameStateType stateType);
-		void PopState();
 		void SwitchStateTo(GameStateType stateType);
 
-		std::vector<int> GetRecordsTable() const;
-		SoundManager& GetSoundManager() { return this->soundManager; }
-		
-	private:
 		std::vector<GameState> gameStateStack;
 		GameStateChangeType gameStateChangeType = GameStateChangeType::None;
 		GameStateType pendingGameStateType = GameStateType::None;

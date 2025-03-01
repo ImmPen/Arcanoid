@@ -5,12 +5,13 @@ namespace Arcanoid
 	{
 	protected:
 		bool isTimerStarted = false;
+		bool isTimerEnded = false;
 		float currentTime;
 		float destroyTime;
 
 		virtual void UpdateTimer(float deltaTime)
 		{
-			if (!isTimerStarted)
+			if (!isTimerStarted || isTimerEnded)
 			{
 				return;
 			}
@@ -18,7 +19,7 @@ namespace Arcanoid
 			EachTickAction(deltaTime);
 			if (currentTime <= 0)
 			{
-				isTimerStarted = false;
+				isTimerEnded = true;
 			}
 		}
 

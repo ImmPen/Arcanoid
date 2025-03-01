@@ -9,18 +9,18 @@ namespace Arcanoid
 {
 	void GameStateRecordsData::Init()
 	{
-		assert(this->font.loadFromFile(RESOURCES_PATH + "Fonts/arial.ttf"));
+		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
 
 		this->titleText.setString("Records");
 		this->titleText.setFont(this->font);
 		this->titleText.setFillColor(sf::Color::Red);
 		this->titleText.setCharacterSize(48);
 
-		this->tableTexts.reserve(NUM_RECORDS_IN_TABLE);
+		this->tableTexts.reserve(SETTINGS.NUM_RECORDS_IN_TABLE);
 
 		int i = 0;
 		auto recordsTable = Application::Instance().GetGame().GetRecordsTable();
-		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < NUM_RECORDS_IN_TABLE; it++, i++)
+		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->tableTexts.emplace_back();
 			sf::Text& text = this->tableTexts.back();
@@ -42,7 +42,7 @@ namespace Arcanoid
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().SwitchStateTo(GameStateType::MainMenu);
+				Application::Instance().GetGame().ExitGame();
 			}
 		}
 	}

@@ -14,22 +14,22 @@ namespace Arcanoid
 		switch (type)
 		{
 		case GameStateType::Playing:
-			this->data = std::make_unique<GameStatePlayingData>();
+			this->data = std::make_shared<GameStatePlayingData>();
 			break;
 		case GameStateType::GameOver:
-			this->data = std::make_unique<GameStateGameOverData>();
+			this->data = std::make_shared<GameStateGameOverData>();
 			break;
 		case GameStateType::MainMenu:
-			this->data = std::make_unique<GameStateMainMenuData>();
+			this->data = std::make_shared<GameStateMainMenuData>();
 			break;
 		case GameStateType::Pause:
-			this->data = std::make_unique<GameStatePauseData>();
+			this->data = std::make_shared<GameStatePauseData>();
 			break;
 		case GameStateType::Records:
-			this->data = std::make_unique<GameStateRecordsData>();
+			this->data = std::make_shared<GameStateRecordsData>();
 			break;
 		case GameStateType::Win:
-			this->data = std::make_unique<GameStateWinData>();
+			this->data = std::make_shared<GameStateWinData>();
 			break;
 		default:
 			break;

@@ -11,21 +11,40 @@ namespace Arcanoid
 		if (type != CollisionType::None)
 		{
 			this->hitCount -= hitDecrease;
+			if (IsBroken())
+			{
+				Emit();
+			}
 		}	
+	}
+
+	int const Block::BlockTypeToColorNum(BlockType type)
+	{
+		switch (type)
+		{
+		case BlockType::Unbreakable:
+			return 7;
+		case BlockType::MultipleHit:
+			return 7;
+		case BlockType::Glass:
+			return 6;
+		default:
+			break;
+		}
 	}
 
 	Block::Block(const sf::Vector2f& position, const int color)
 		: GameObject(
-			RESOURCES_PATH + (std::string)"spritesheet-breakout.png",
-			BLOCK_RECT_IN_TEXTURE,
+			SETTINGS.RESOURCES_PATH + (std::string)"spritesheet-breakout.png",
+			SETTINGS.BLOCK_RECT_IN_TEXTURE,
 			position,
-			BLOCK_WIDTH,
-			BLOCK_HEIGHT)
+			SETTINGS.BLOCK_WIDTH,
+			SETTINGS.BLOCK_HEIGHT)
 	{
-		auto rect = BLOCK_RECT_IN_TEXTURE;
+		auto rect = SETTINGS.BLOCK_RECT_IN_TEXTURE;
 		this->color = color;
-		rect.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
-		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rect));
+		rect.top = SETTINGS.BLOCK_RECT_IN_TEXTURE.top + this->color * SETTINGS.BLOCK_HEIGHT_ON_TILESET;
+		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png", rect));
 	}
 
 	void Block::Update(float timeDelta)
@@ -49,7 +68,7 @@ namespace Arcanoid
 		Super::OnHit(type);
 		if (this->hitCount <= 0)
 		{
-			StartTimer(BREAK_TIME);
+			StartTimer(SETTINGS.BREAK_TIME);
 		}
 	}
 
@@ -58,6 +77,11 @@ namespace Arcanoid
 		Block(position, color)
 	{
 
+	}
+
+	SmoothDestroyableBlock::SmoothDestroyableBlock(const sf::Vector2f& position)
+		: Block(position, rand() % 6)
+	{
 	}
 
 	void SmoothDestroyableBlock::Update(float deltaTime)
@@ -77,21 +101,30 @@ namespace Arcanoid
 
 	bool SmoothDestroyableBlock::IsBroken() const
 	{
-		return Super::IsBroken() && (!isTimerStarted);
+		return Super::IsBroken() && (isTimerEnded);
 	}
 
 	void SmoothDestroyableBlock::EachTickAction(float deltaTime)
 	{
 		const float timeSinceStartedAnimation = destroyTime - currentTime;
-		const int currentFrame = static_cast<int>(timeSinceStartedAnimation / TIME_ON_FRAME);
-		sf::IntRect rectOnTileSet = BLOCK_RECT_IN_TEXTURE;
-		rectOnTileSet.top = BLOCK_RECT_IN_TEXTURE.top + this->color * BLOCK_HEIGHT_ON_TILESET;
-		rectOnTileSet.left = BLOCK_RECT_IN_TEXTURE.left + currentFrame * BLOCK_WIDTH_ON_TILESET;
-		assert(this->texture.loadFromFile(RESOURCES_PATH + "spritesheet-breakout.png", rectOnTileSet));
+		const int currentFrame = static_cast<int>(timeSinceStartedAnimation / SETTINGS.TIME_ON_FRAME);
+		sf::IntRect rectOnTileSet = SETTINGS.BLOCK_RECT_IN_TEXTURE;
+		rectOnTileSet.top = SETTINGS.BLOCK_RECT_IN_TEXTURE.top + this->color * SETTINGS.BLOCK_HEIGHT_ON_TILESET;
+		rectOnTileSet.left = SETTINGS.BLOCK_RECT_IN_TEXTURE.left + currentFrame * SETTINGS.BLOCK_WIDTH_ON_TILESET;
+		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png", rectOnTileSet));
+	}
+
+	void SmoothDestroyableBlock::UpdateTimer(float deltaTime)
+	{
+		IDelayedAction::UpdateTimer(deltaTime);
+		if (IsBroken())
+		{
+			Emit();
+		}
 	}
 
 	UnbreakableBlock::UnbreakableBlock(const sf::Vector2f& position)
-		: Block(position, 7)
+		: Block(position, BlockTypeToColorNum(BlockType::Unbreakable))
 	{
 		hitDecrease = 0;
 	}

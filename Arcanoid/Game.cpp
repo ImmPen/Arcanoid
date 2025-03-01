@@ -1,5 +1,7 @@
 #include "Game.h"
 #include <fstream>
+#include <assert.h>
+#include "GameStatePlaying.h"
 
 namespace Arcanoid
 {
@@ -8,7 +10,7 @@ namespace Arcanoid
 		std::ifstream in(tablePath);
 		if (!in.is_open())
 		{
-			for (int i = 0; i < NUM_RECORDS_IN_TABLE; i++)
+			for (int i = 0; i < SETTINGS.NUM_RECORDS_IN_TABLE; i++)
 			{
 				this->recordsTable.push_back(0);
 			}
@@ -31,7 +33,7 @@ namespace Arcanoid
 	{
 		std::fstream out(tablePath);
 		int i = 0;
-		for (auto it = this->recordsTable.begin(); it != this->recordsTable.end() && i < NUM_RECORDS_IN_TABLE; it++, i++)
+		for (auto it = this->recordsTable.begin(); it != this->recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			out << *it << "\n";
 		}
@@ -44,7 +46,7 @@ namespace Arcanoid
 		this->pendingGameStateType = GameStateType::None;
 		SwitchStateTo(GameStateType::MainMenu);
 
-		std::string tablePath = RESOURCES_PATH + "Records.txt";
+		std::string tablePath = SETTINGS.RESOURCES_PATH + "Records.txt";
 		this->LoadTableFromFile(tablePath);
 	}
 
@@ -77,7 +79,7 @@ namespace Arcanoid
 		}
 		this->gameStateChangeType = GameStateChangeType::None;
 		this->pendingGameStateType = GameStateType::None;
-		this->TypeTableToFile(RESOURCES_PATH + "Records.txt");
+		this->TypeTableToFile(SETTINGS.RESOURCES_PATH + "Records.txt");
 	}
 
 	bool Game::IsEnableOptions(GameOptions option) const
@@ -164,4 +166,64 @@ namespace Arcanoid
 	{
 		return this->recordsTable;
 	}
+	void Game::StartGame()
+	{
+		SwitchStateTo(GameStateType::Playing);
+	}
+
+	void Game::PauseGame()
+	{
+		PushState(GameStateType::Pause);
+	}
+
+	void Game::WinGame()
+	{
+		PushState(GameStateType::Win);
+	}
+
+	void Game::LoseGame()
+	{
+		PushState(GameStateType::GameOver);
+	}
+
+	void Game::UpdateGame(float timeDelta, sf::RenderWindow& window)
+	{
+		HandleWindowEvents(window);
+
+		if (Update(SETTINGS.TIME_PER_FRAME))
+		{
+			window.clear();
+
+			Draw(window);
+
+			window.display();
+		}
+		else
+		{
+			window.close();
+		}
+	}
+
+	void Game::ExitGame()
+	{
+		SwitchStateTo(GameStateType::MainMenu);
+	}
+
+	void Game::QuitGame()
+	{
+		SwitchStateTo(GameStateType::None);
+	}
+
+	void Game::ShowRecords()
+	{
+		SwitchStateTo(GameStateType::Records);
+	}
+
+	void Game::LoadNextLevel()
+	{
+		assert(gameStateStack.back().GetType() == GameStateType::Playing);
+		auto playingData = (gameStateStack.back().GetData<GameStatePlayingData>());
+		playingData->LoadNextLevel();
+	}
+
 }

@@ -8,14 +8,14 @@ namespace Arcanoid
 {
 	void GameStateMainMenuData::Init()
 	{
-		assert(this->font.loadFromFile(RESOURCES_PATH + "Fonts/arial.ttf"));
+		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
 
 		MenuItem startGame;
 		startGame.text.setString("Start Game");
 		startGame.text.setFont(this->font);
 		startGame.text.setCharacterSize(24);
 		startGame.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::Playing);
+			Application::Instance().GetGame().StartGame();
 			};
 
 		const bool isMusicOn = Application::Instance().GetGame().IsEnableOptions(GameOptions::MUSIC_ON);
@@ -61,7 +61,7 @@ namespace Arcanoid
 		recordsItem.text.setFont(this->font);
 		recordsItem.text.setCharacterSize(24);
 		recordsItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::Records);
+			Application::Instance().GetGame().ShowRecords();
 			};
 
 		MenuItem yesItem;
@@ -69,7 +69,7 @@ namespace Arcanoid
 		yesItem.text.setFont(this->font);
 		yesItem.text.setCharacterSize(24);
 		yesItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().SwitchStateTo(GameStateType::None);
+			Application::Instance().GetGame().QuitGame();
 			};
 
 		MenuItem noItem;

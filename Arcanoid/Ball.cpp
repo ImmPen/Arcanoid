@@ -8,10 +8,10 @@ namespace Arcanoid
 {
 	Ball::Ball(const sf::Vector2f& position)
 		: GameObject(
-			RESOURCES_PATH + "spritesheet-breakout.png",
-			BALL_RECT_IN_TEXTURE,
+			SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png",
+			SETTINGS.BALL_RECT_IN_TEXTURE,
 			position,
-			BALL_SIZE, BALL_SIZE)
+			SETTINGS.BALL_SIZE, SETTINGS.BALL_SIZE)
 	{
 		const float angle = lastAngle;
 		this->direction.x = std::cos(std::numbers::pi / 180 * angle);
@@ -20,16 +20,18 @@ namespace Arcanoid
 
 	void Ball::Update(float timeDelta)
 	{
-		const auto pos = sprite.getPosition() + BALL_SPEED * timeDelta * this->direction;
+		const auto pos = sprite.getPosition() + SETTINGS.BALL_SPEED * timeDelta * this->direction;
 		this->sprite.setPosition(pos);
 
-		if (pos.x - BALL_SIZE / 2 <= 0 || pos.x + BALL_SIZE / 2 >= SCREEN_WIDTH) {
+		if (pos.x - SETTINGS.BALL_SIZE / 2 <= 0 || pos.x + SETTINGS.BALL_SIZE / 2 >= SETTINGS.SCREEN_WIDTH) {
 			InvertDirectionX();
 		}
 
-		if (pos.y - BALL_SIZE / 2 <= 0 || pos.y + BALL_SIZE / 2 >= SCREEN_HEIGHT) {
+		if (pos.y - SETTINGS.BALL_SIZE / 2 <= 0 || pos.y + SETTINGS.BALL_SIZE / 2 >= SETTINGS.SCREEN_HEIGHT) {
 			InvertDirectionY();
 		}
+
+		Emit();
 	}
 
 	void Ball::InvertDirectionX()

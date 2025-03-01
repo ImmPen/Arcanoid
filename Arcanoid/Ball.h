@@ -2,10 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
 #include "Block.h"
+#include "IObserver.h"
 
 namespace Arcanoid
 {
-	class Ball : public GameObject, public ICollidable
+	class Ball : public GameObject, public ICollidable, public IObservable
 	{
 	public:
 		Ball(const sf::Vector2f& position);

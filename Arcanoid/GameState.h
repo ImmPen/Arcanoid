@@ -39,7 +39,7 @@ namespace Arcanoid
 		template<class T>
 		T* GetData() const
 		{
-			return static_cast<T>(data);
+			return static_cast<T*>(data.get());
 		}
 		void Update(float timeDelta);
 		void Draw(sf::RenderWindow& window);
@@ -47,6 +47,6 @@ namespace Arcanoid
 
 	private:
 		GameStateType type = GameStateType::None;
-		std::unique_ptr<GameStateData> data = nullptr;
+		std::shared_ptr<GameStateData> data = nullptr;
 	};
 }

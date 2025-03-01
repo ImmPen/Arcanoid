@@ -12,8 +12,10 @@ namespace Arcanoid
 
 		const sf::Vector2f& GetPosition() const { return this->sprite.getPosition(); }
 		const sf::FloatRect& GetSpriteRect() const { return this->sprite.getGlobalBounds(); }
+		virtual void Restart();
 	protected:
 		sf::Sprite sprite;
 		sf::Texture texture;
+		const sf::Vector2f startPosition;
 	};
 }
