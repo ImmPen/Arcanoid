@@ -22,6 +22,7 @@ namespace Arcanoid
 		int hitCount = 1;
 		int hitDecrease = 1;
 		int color;
+		int score = 100;
 	public:
 		Block(const sf::Vector2f& position, const int color);
 		virtual ~Block() override = default;
@@ -29,6 +30,7 @@ namespace Arcanoid
 		CollisionType GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
 		virtual bool IsBroken() const;
+		int GetScore();
 	};
 
 	class SmoothDestroyableBlock : public Block, public IDelayedAction

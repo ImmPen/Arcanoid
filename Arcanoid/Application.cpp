@@ -12,7 +12,7 @@ namespace Arcanoid
 		window(sf::VideoMode(SETTINGS.SCREEN_WIDTH, SETTINGS.SCREEN_HEIGHT), SETTINGS.GAME_NAME)
 	{
 
-		unsigned int seed = (unsigned int)time(nullptr); // Get current time as seed. You can also use any other number to fix randomization
+		unsigned int seed = (unsigned int)time(nullptr);
 		srand(seed);
 	}
 

@@ -5,6 +5,7 @@
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "GameState.h"
+#include "ScoreManager.h"
 
 namespace Arcanoid
 {
@@ -34,8 +35,7 @@ namespace Arcanoid
 		bool IsEnableOptions(GameOptions option) const;
 		void SetOption(GameOptions option, bool value);
 
-		std::vector<int> GetRecordsTable() const;
-		SoundManager& GetSoundManager() { return this->soundManager; }
+		std::shared_ptr<ScoreManager> GetScoreManager() { return scoreManager; }
 
 		void StartGame();
 		void PauseGame();
@@ -45,6 +45,7 @@ namespace Arcanoid
 		void ExitGame();
 		void QuitGame();
 		void ShowRecords();
+		void ExitRecords();
 		void LoadNextLevel();
 
 		void PopState();
@@ -64,11 +65,7 @@ namespace Arcanoid
 		GameStateType pendingGameStateType = GameStateType::None;
 
 		GameOptions options = GameOptions::DEFAULT;
-		std::vector<int> recordsTable;
 		int currentScore = 0;
-		SoundManager soundManager;
-
-		void LoadTableFromFile(std::string tablePath);
-		void TypeTableToFile(std::string tablePath);
+		std::shared_ptr<ScoreManager> scoreManager;
 	};
 }

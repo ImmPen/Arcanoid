@@ -8,6 +8,7 @@
 #include "BlockFactory.h"
 #include "Level.h"
 #include "IObserver.h"
+#include "Menu.h"
 #include <memory>
 
 namespace Arcanoid

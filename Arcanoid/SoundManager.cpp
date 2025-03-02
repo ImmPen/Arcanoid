@@ -33,7 +33,7 @@ namespace Arcanoid
 				this->gameOverSound.play();
 				break;
 			case Sounds::menuHoverSound:
-				//this->menuHoverSound.play();
+				//this->menuHoverSound.play();		//sound off cause its annoying
 				break;
 			default:
 				break;

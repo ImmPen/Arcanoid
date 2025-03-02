@@ -62,6 +62,11 @@ namespace Arcanoid
 		return this->hitCount <= 0;
 	}
 
+	int Block::GetScore()
+	{
+		return this->score;
+	}
+
 
 	void SmoothDestroyableBlock::OnHit(CollisionType type)
 	{

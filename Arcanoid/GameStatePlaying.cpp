@@ -4,6 +4,7 @@
 #include "GameSettings.h"
 #include "Application.h"
 #include "VariousBlock.h"
+#include "SoundManager.h"
 
 
 namespace Arcanoid
@@ -12,6 +13,13 @@ namespace Arcanoid
 	{
 		currentLevel = 0;
 		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
+		this->scoreText.setString("Score: 0");
+		this->scoreText.setFont(this->font);
+		this->scoreText.setFillColor(sf::Color::Red);
+		this->scoreText.setCharacterSize(12);
+
+		Application::Instance().GetGame().GetScoreManager()->ClearScore();
+
 		gameObjects.emplace_back(std::make_shared<Platform>(
 			sf::Vector2f({
 				static_cast<float>(SETTINGS.SCREEN_WIDTH / 2),
@@ -81,6 +89,11 @@ namespace Arcanoid
 
 	void GameStatePlayingData::Draw(sf::RenderWindow& window)
 	{
+		sf::Vector2f viewSize = window.getView().getSize();
+		this->scoreText.setOrigin(GetTextOrigin(this->scoreText, { 0.5f, 0.f }));
+		this->scoreText.setPosition(viewSize.x / 2.f, 50.f);
+		window.draw(this->scoreText);
+
 		static auto drawFunc = [&window](auto element) { element->Draw(window); };
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunc);
 		std::for_each(blocks.begin(), blocks.end(), drawFunc);
@@ -90,6 +103,7 @@ namespace Arcanoid
 	{
 		if (currentLevel >= levelLoader.GetLevelCount() - 1) {
 			Game& game = Application::Instance().GetGame();
+			auto scoreManager = Application::Instance().GetGame().GetScoreManager();
 			game.WinGame();
 		}
 		else
@@ -108,7 +122,9 @@ namespace Arcanoid
 	void GameStatePlayingData::Notify(std::shared_ptr<IObservable> observable)
 	{
 		Game& game = Application::Instance().GetGame();
-		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {			
+		auto scoreManager = Application::Instance().GetGame().GetScoreManager();
+		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {
+			this->scoreText.setString("Score: " + std::to_string(scoreManager->GetScore()));
 			if (IsWinCondition()) {
 				game.LoadNextLevel();
 			}
@@ -116,7 +132,7 @@ namespace Arcanoid
 		else if (auto ball = std::dynamic_pointer_cast<Ball>(observable); ball)
 		{
 			if (ball->GetPosition().y > gameObjects.front()->GetSpriteRect().top) {
-				game.GetSoundManager().PlaySound(Sounds::gameOverSound);
+				SoundManager::Instance().PlaySound(Sounds::gameOverSound);
 				game.LoseGame();
 			}
 		}
@@ -125,11 +141,6 @@ namespace Arcanoid
 	void GameStatePlayingData::CreateBlocks()
 	{
 		auto self = weak_from_this();
-
-		/*for (const auto& pair : factories)
-		{
-			pair.second->ClearCounter();
-		}*/
 		auto& level = levelLoader.GetLevel(currentLevel);
 		for (auto block : level.blocks)
 		{
@@ -141,6 +152,8 @@ namespace Arcanoid
 				(float)(blockPostion.y * SETTINGS.BLOCK_HEIGHT)
 			};
 			blocks.emplace_back(factories.at(blockType)->CreateBlock(position));
+			auto scoreManager = Application::Instance().GetGame().GetScoreManager();
+			blocks.back()->AddObserver(scoreManager);
 			blocks.back()->AddObserver(self);
 		}
 	}

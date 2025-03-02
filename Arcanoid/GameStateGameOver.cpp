@@ -2,6 +2,7 @@
 #include "GameStateGameOver.h"
 #include "Game.h"
 #include "Application.h"
+#include "Texts.h"
 
 namespace Arcanoid
 {
@@ -10,14 +11,21 @@ namespace Arcanoid
 		assert(this->font.loadFromFile(SETTINGS.RESOURCES_PATH + "Fonts/arial.ttf"));
 
 		MenuItem newGameItem;
-		newGameItem.text.setString("Start new game");
-		newGameItem.text.setFont(this->font);
-		newGameItem.text.setCharacterSize(24);
+		InitText(
+			newGameItem.text,
+			"Start new game",
+			24,
+			this->font);
 		newGameItem.onPressCallback = [](MenuItem&) {
 			Application::Instance().GetGame().StartGame();
 			};
 
 		MenuItem mainMenuItem;
+		InitText(
+			mainMenuItem.text,
+			"Exit main menu",
+			24,
+			this->font);
 		mainMenuItem.text.setString("Exit main menu");
 		mainMenuItem.text.setFont(this->font);
 		mainMenuItem.text.setCharacterSize(24);
@@ -26,10 +34,12 @@ namespace Arcanoid
 			};
 
 		MenuItem gameOverMenu;
-		gameOverMenu.hintText.setString("Game Over");
-		gameOverMenu.hintText.setFont(this->font);
-		gameOverMenu.hintText.setCharacterSize(24);
-		gameOverMenu.hintText.setFillColor(sf::Color::Red);
+		InitText(
+			gameOverMenu.hintText,
+			"Game Over",
+			24,
+			this->font,
+			sf::Color::Red);
 		gameOverMenu.childrenOrientation = Orientation::Horizontal;
 		gameOverMenu.childrenAlignment = Alignment::Middle;
 		gameOverMenu.childrenSpacing = 20.f;
@@ -39,18 +49,25 @@ namespace Arcanoid
 		this->menu.Init(gameOverMenu);
 		
 		int i = 0;
-		auto recordsTable = Application::Instance().GetGame().GetRecordsTable();
-		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
+		auto recordsTable = Application::Instance().GetGame().GetScoreManager()->GetRecordsTable();
+		for (auto it = recordsTable.rbegin(); it != recordsTable.rend() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->recordsTableTexts.emplace_back();
 			sf::Text& text = this->recordsTableTexts.back();
 
-			text.setString(std::to_string(i + 1) + ". " + std::to_string(*it));
-			text.setFont(this->font);
-			text.setFillColor(sf::Color::White);
-			text.setCharacterSize(24);
+			InitText(
+				text,
+				std::to_string(i + 1) + ". " + std::to_string(*it),
+				24,
+				this->font
+			);
 		}
-
+		InitText(
+			scoreText,
+			"Your Score: " + std::to_string(Application::Instance().GetGame().GetScoreManager()->GetScore()),
+			24,
+			this->font
+		);
 		this->background.setFillColor(sf::Color(0, 0, 0, 128));
 	}
 	void GameStateGameOverData::HandleWindowEvent(const sf::Event& event)
@@ -70,13 +87,13 @@ namespace Arcanoid
 			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToPreviousMenuItem();
 			}
 			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToNextMenuItem();
 			}
 		}
@@ -93,6 +110,10 @@ namespace Arcanoid
 		hintText->setPosition(viewSize.x / 2.f, 150.f);
 		window.draw(*hintText);
 
-		this->menu.Draw(window, viewSize / 2.f, { 0.5f, 0.f });
+		scoreText.setOrigin(GetTextOrigin(scoreText, { 0.5f, 0.5f }));
+		scoreText.setPosition(viewSize.x / 2.f, 300.f);
+		window.draw(scoreText);
+
+		this->menu.Draw(window, sf::Vector2f(viewSize.x / 2.f, viewSize.y * 0.75), { 0.5f, 0.f });
 	}
 }

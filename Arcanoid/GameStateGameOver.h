@@ -19,6 +19,7 @@ namespace Arcanoid
 		sf::RectangleShape background;
 
 		std::vector<sf::Text> recordsTableTexts;
+		sf::Text scoreText;
 
 		Menu menu;
 	};

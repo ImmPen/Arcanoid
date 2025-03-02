@@ -19,8 +19,8 @@ namespace Arcanoid
 		this->tableTexts.reserve(SETTINGS.NUM_RECORDS_IN_TABLE);
 
 		int i = 0;
-		auto recordsTable = Application::Instance().GetGame().GetRecordsTable();
-		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
+		auto recordsTable = Application::Instance().GetGame().GetScoreManager()->GetRecordsTable();
+		for (auto it = recordsTable.rbegin(); it != recordsTable.rend() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->tableTexts.emplace_back();
 			sf::Text& text = this->tableTexts.back();

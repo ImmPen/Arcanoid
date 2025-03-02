@@ -5,49 +5,16 @@
 
 namespace Arcanoid
 {
-	void Game::LoadTableFromFile(std::string tablePath)
-	{
-		std::ifstream in(tablePath);
-		if (!in.is_open())
-		{
-			for (int i = 0; i < SETTINGS.NUM_RECORDS_IN_TABLE; i++)
-			{
-				this->recordsTable.push_back(0);
-			}
-		}
-		else
-		{
-			while (!in.eof())
-			{
-				int record;
-				while (in >> record)
-				{
-					this->recordsTable.push_back(record);
-				}
-			}
-		}
-		in.close();
-	}
-
-	void Game::TypeTableToFile(std::string tablePath)
-	{
-		std::fstream out(tablePath);
-		int i = 0;
-		for (auto it = this->recordsTable.begin(); it != this->recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
-		{
-			out << *it << "\n";
-		}
-		out.close();
-	}
-
 	Game::Game()
 	{
 		this->gameStateChangeType = GameStateChangeType::None;
 		this->pendingGameStateType = GameStateType::None;
 		SwitchStateTo(GameStateType::MainMenu);
 
+		scoreManager = std::make_shared<ScoreManager>();
+		
 		std::string tablePath = SETTINGS.RESOURCES_PATH + "Records.txt";
-		this->LoadTableFromFile(tablePath);
+		scoreManager->LoadTableFromFile(tablePath);
 	}
 
 	Game::~Game()
@@ -79,7 +46,7 @@ namespace Arcanoid
 		}
 		this->gameStateChangeType = GameStateChangeType::None;
 		this->pendingGameStateType = GameStateType::None;
-		this->TypeTableToFile(SETTINGS.RESOURCES_PATH + "Records.txt");
+		this->scoreManager->TypeTableToFile(SETTINGS.RESOURCES_PATH + "Records.txt");
 	}
 
 	bool Game::IsEnableOptions(GameOptions option) const
@@ -126,7 +93,7 @@ namespace Arcanoid
 
 		if (this->gameStateStack.size() > 0)	// Обновляем игру
 		{
-			this->soundManager.PlayMusic();
+			SoundManager::Instance().PlayMusic();
 			this->gameStateStack.back().Update(timer);
 			return true;
 		}
@@ -162,10 +129,6 @@ namespace Arcanoid
 		this->gameStateChangeType = GameStateChangeType::Switch;
 	}
 
-	std::vector<int> Game::GetRecordsTable() const
-	{
-		return this->recordsTable;
-	}
 	void Game::StartGame()
 	{
 		SwitchStateTo(GameStateType::Playing);
@@ -178,11 +141,13 @@ namespace Arcanoid
 
 	void Game::WinGame()
 	{
+		scoreManager->AddEntryToTable();
 		PushState(GameStateType::Win);
 	}
 
 	void Game::LoseGame()
 	{
+		scoreManager->AddEntryToTable();
 		PushState(GameStateType::GameOver);
 	}
 
@@ -206,6 +171,7 @@ namespace Arcanoid
 
 	void Game::ExitGame()
 	{
+		scoreManager->AddEntryToTable();
 		SwitchStateTo(GameStateType::MainMenu);
 	}
 
@@ -217,6 +183,11 @@ namespace Arcanoid
 	void Game::ShowRecords()
 	{
 		SwitchStateTo(GameStateType::Records);
+	}
+
+	void Game::ExitRecords()
+	{
+		SwitchStateTo(GameStateType::MainMenu);
 	}
 
 	void Game::LoadNextLevel()

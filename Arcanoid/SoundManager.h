@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include "IObserver.h"
 
 namespace Arcanoid
 {
@@ -15,10 +16,17 @@ namespace Arcanoid
 	class SoundManager
 	{
 	public:
-		SoundManager();
 		void PlaySound(Sounds sound);
 		void PlayMusic();
+
+		static SoundManager& Instance()
+		{
+			static SoundManager instance;
+			return instance;
+		}
 	private:
+		SoundManager();
+
 		sf::SoundBuffer reboundBuffer;
 		sf::SoundBuffer gameOverBuffer;
 		sf::SoundBuffer menuHoverBuffer;

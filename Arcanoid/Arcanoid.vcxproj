@@ -151,6 +151,8 @@
     <ClInclude Include="IObserver.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="Texts.h" />
     <ClInclude Include="VariousBlock.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="SoundManager.h" />
@@ -174,6 +176,8 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="Texts.cpp" />
     <ClCompile Include="VariousBlock.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="SoundManager.cpp" />

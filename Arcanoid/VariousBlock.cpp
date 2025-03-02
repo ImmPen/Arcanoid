@@ -11,9 +11,10 @@ namespace Arcanoid
 		rect.left = SETTINGS.BLOCK_RECT_IN_TEXTURE.left + SETTINGS.BLOCK_WIDTH_ON_TILESET;
 		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "spritesheet-breakout.png", rect));
 		this->hitCount = durability;
+		this->score *= durability;
 	}
 	MultipleHitBlock::MultipleHitBlock(const sf::Vector2f& position) 
-		: MultipleHitBlock(position, 3)
+		: MultipleHitBlock(position, SETTINGS.MAX_DURABILITY)
 	{
 	}
 	void MultipleHitBlock::StageChange()
@@ -28,7 +29,7 @@ namespace Arcanoid
 	GlassBlock::GlassBlock(const sf::Vector2f& position)
 		: Block(position, BlockTypeToColorNum(BlockType::Glass))
 	{
-
+		this->score /= 2;
 	}
 	CollisionType GlassBlock::GetCollision(std::shared_ptr<ICollidable> collidable) const 
 	{

@@ -39,8 +39,8 @@ namespace Arcanoid
 		this->menu.Init(gameWinMenu);
 
 		int i = 0;
-		auto recordsTable = Application::Instance().GetGame().GetRecordsTable();
-		for (auto it = recordsTable.begin(); it < recordsTable.end() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
+		auto recordsTable = Application::Instance().GetGame().GetScoreManager()->GetRecordsTable();
+		for (auto it = recordsTable.rbegin(); it != recordsTable.rend() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->recordsTableTexts.emplace_back();
 			sf::Text& text = this->recordsTableTexts.back();
@@ -70,13 +70,13 @@ namespace Arcanoid
 			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToPreviousMenuItem();
 			}
 			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToNextMenuItem();
 			}
 		}

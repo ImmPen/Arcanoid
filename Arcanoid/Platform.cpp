@@ -41,7 +41,7 @@ namespace Arcanoid
 			auto ballPosOnPlatform = (ball->GetPosition().x - (rect.left + rect.width / 2)) / (rect.width / 2);
 			ball->ChangeAngle(90 - 20 * ballPosOnPlatform);
 			ICollidable::CheckCollision(collidable);
-			Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::reboundSound);
+			SoundManager::Instance().PlaySound(Sounds::reboundSound);
 			return true;
 		}
 		return	false;

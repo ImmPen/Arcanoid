@@ -128,13 +128,13 @@ namespace Arcanoid
 			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToPreviousMenuItem();
 			}
 			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
 				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
 			{
-				Application::Instance().GetGame().GetSoundManager().PlaySound(Sounds::menuHoverSound);
+				SoundManager::Instance().PlaySound(Sounds::menuHoverSound);
 				this->menu.SwitchToNextMenuItem();
 			}
 		}
