@@ -2,6 +2,7 @@
 #include <fstream>
 #include <assert.h>
 #include "GameStatePlaying.h"
+#include "SaveManager.h"
 
 namespace Arcanoid
 {
@@ -10,11 +11,9 @@ namespace Arcanoid
 		this->gameStateChangeType = GameStateChangeType::None;
 		this->pendingGameStateType = GameStateType::None;
 		SwitchStateTo(GameStateType::MainMenu);
-
-		scoreManager = std::make_shared<ScoreManager>();
 		
 		std::string tablePath = SETTINGS.RESOURCES_PATH + "Records.txt";
-		scoreManager->LoadTableFromFile(tablePath);
+		ScoreManager::Instance()->GetShared()->LoadTableFromFile(tablePath);
 	}
 
 	Game::~Game()
@@ -46,7 +45,7 @@ namespace Arcanoid
 		}
 		this->gameStateChangeType = GameStateChangeType::None;
 		this->pendingGameStateType = GameStateType::None;
-		this->scoreManager->TypeTableToFile(SETTINGS.RESOURCES_PATH + "Records.txt");
+		ScoreManager::Instance()->GetShared()->TypeTableToFile(SETTINGS.RESOURCES_PATH + "Records.txt");
 	}
 
 	bool Game::IsEnableOptions(GameOptions option) const
@@ -141,13 +140,13 @@ namespace Arcanoid
 
 	void Game::WinGame()
 	{
-		scoreManager->AddEntryToTable();
+		ScoreManager::Instance()->GetShared()->AddEntryToTable();
 		PushState(GameStateType::Win);
 	}
 
 	void Game::LoseGame()
 	{
-		scoreManager->AddEntryToTable();
+		ScoreManager::Instance()->GetShared()->AddEntryToTable();
 		PushState(GameStateType::GameOver);
 	}
 
@@ -169,9 +168,9 @@ namespace Arcanoid
 		}
 	}
 
-	void Game::ExitGame()
+	void Game::ExitAndSave()
 	{
-		scoreManager->AddEntryToTable();
+		SaveManager::Instance().SaveToFile(gameStateStack.front().GetData<GameStatePlayingData>()->Save());
 		SwitchStateTo(GameStateType::MainMenu);
 	}
 
@@ -185,7 +184,7 @@ namespace Arcanoid
 		SwitchStateTo(GameStateType::Records);
 	}
 
-	void Game::ExitRecords()
+	void Game::Exit()
 	{
 		SwitchStateTo(GameStateType::MainMenu);
 	}
@@ -196,5 +195,4 @@ namespace Arcanoid
 		auto playingData = (gameStateStack.back().GetData<GameStatePlayingData>());
 		playingData->LoadNextLevel();
 	}
-
 }

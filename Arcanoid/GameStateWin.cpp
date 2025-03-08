@@ -22,7 +22,7 @@ namespace Arcanoid
 		mainMenuItem.text.setFont(this->font);
 		mainMenuItem.text.setCharacterSize(24);
 		mainMenuItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().ExitGame();
+			Application::Instance().GetGame().Exit();
 			};
 
 		MenuItem gameWinMenu;
@@ -39,7 +39,7 @@ namespace Arcanoid
 		this->menu.Init(gameWinMenu);
 
 		int i = 0;
-		auto recordsTable = Application::Instance().GetGame().GetScoreManager()->GetRecordsTable();
+		auto recordsTable = ScoreManager::Instance()->GetShared()->GetRecordsTable();
 		for (auto it = recordsTable.rbegin(); it != recordsTable.rend() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->recordsTableTexts.emplace_back();
@@ -59,7 +59,7 @@ namespace Arcanoid
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().ExitGame();
+				Application::Instance().GetGame().Exit();
 			}
 			else if (event.key.code == sf::Keyboard::Enter)
 			{

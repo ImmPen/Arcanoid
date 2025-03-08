@@ -8,6 +8,7 @@ namespace Arcanoid
 {
 	enum class BlockType
 	{
+		Usual,
 		Animated,
 		Unbreakable,
 		MultipleHit,
@@ -29,6 +30,7 @@ namespace Arcanoid
 		void Update(float timeDelta) override;
 		CollisionType GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
+		virtual BlockType GetType() { return BlockType::Usual; }
 		virtual bool IsBroken() const;
 		int GetScore();
 	};
@@ -46,6 +48,7 @@ namespace Arcanoid
 		void Update(float deltaTime) override;
 		CollisionType GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 		bool IsBroken() const override;
+		virtual BlockType GetType() override { return BlockType::Animated; }
 
 		void EachTickAction(float deltaTime) override;
 		void UpdateTimer(float deltaTime) override;
@@ -57,5 +60,7 @@ namespace Arcanoid
 	public:
 		UnbreakableBlock(const sf::Vector2f& position);
 		~UnbreakableBlock() override = default;
+
+		virtual BlockType GetType() override { return BlockType::Unbreakable; }
 	};
 }

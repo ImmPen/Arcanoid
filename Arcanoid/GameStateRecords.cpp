@@ -19,7 +19,7 @@ namespace Arcanoid
 		this->tableTexts.reserve(SETTINGS.NUM_RECORDS_IN_TABLE);
 
 		int i = 0;
-		auto recordsTable = Application::Instance().GetGame().GetScoreManager()->GetRecordsTable();
+		auto recordsTable = ScoreManager::Instance()->GetShared()->GetRecordsTable();
 		for (auto it = recordsTable.rbegin(); it != recordsTable.rend() && i < SETTINGS.NUM_RECORDS_IN_TABLE; it++, i++)
 		{
 			this->tableTexts.emplace_back();
@@ -42,7 +42,7 @@ namespace Arcanoid
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				Application::Instance().GetGame().ExitGame();
+				Application::Instance().GetGame().Exit();
 			}
 		}
 	}

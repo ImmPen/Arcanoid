@@ -9,6 +9,7 @@
 #include "Level.h"
 #include "IObserver.h"
 #include "Menu.h"
+#include "SaveManager.h"
 #include <memory>
 
 namespace Arcanoid
@@ -20,8 +21,13 @@ namespace Arcanoid
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Update(float timeDelta) override;
 		void Draw(sf::RenderWindow& window) override;
+
 		void LoadNextLevel();
-		void Notify(std::shared_ptr<IObservable> observable) override;
+
+		void Notify(std::shared_ptr<IObservable> observable) override;		// IObserver
+
+		GameMemento Save();													// Saves
+		bool Load(const GameMemento& memento);
 	private:
 		void CreateBlocks();
 		bool IsWinCondition();

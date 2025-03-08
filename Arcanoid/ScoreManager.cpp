@@ -21,6 +21,11 @@ namespace Arcanoid
 		return totalScore;
 	}
 
+	void ScoreManager::SetScore(int sc)
+	{
+		this->totalScore = sc;
+	}
+
 	std::multiset<int> ScoreManager::GetRecordsTable() const
 	{
 		return this->recordsTable;

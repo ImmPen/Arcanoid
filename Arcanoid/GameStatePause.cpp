@@ -15,7 +15,7 @@ namespace Arcanoid
 		yesItem.text.setFont(this->font);
 		yesItem.text.setCharacterSize(24);
 		yesItem.onPressCallback = [](MenuItem&) {
-			Application::Instance().GetGame().ExitGame();
+			Application::Instance().GetGame().ExitAndSave();
 			};
 
 		MenuItem noItem;

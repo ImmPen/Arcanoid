@@ -67,7 +67,6 @@ namespace Arcanoid
 		return this->score;
 	}
 
-
 	void SmoothDestroyableBlock::OnHit(CollisionType type)
 	{
 		Super::OnHit(type);

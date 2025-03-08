@@ -18,7 +18,7 @@ namespace Arcanoid
 		this->scoreText.setFillColor(sf::Color::Red);
 		this->scoreText.setCharacterSize(12);
 
-		Application::Instance().GetGame().GetScoreManager()->ClearScore();
+		ScoreManager::Instance()->GetShared()->ClearScore();
 
 		gameObjects.emplace_back(std::make_shared<Platform>(
 			sf::Vector2f({
@@ -31,8 +31,12 @@ namespace Arcanoid
 		this->factories.emplace(BlockType::Unbreakable, std::make_unique<UnbreakableBlockFactory>());
 		this->factories.emplace(BlockType::MultipleHit, std::make_unique<MultipleHitBlockFactory>());
 		this->factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
-		CreateBlocks();
+		if (!Load(SaveManager::Instance().LoadFromFile(SETTINGS.RESOURCES_PATH + "save.dat")))
+		{
+			CreateBlocks();
+		}
 	}
+
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
@@ -103,7 +107,6 @@ namespace Arcanoid
 	{
 		if (currentLevel >= levelLoader.GetLevelCount() - 1) {
 			Game& game = Application::Instance().GetGame();
-			auto scoreManager = Application::Instance().GetGame().GetScoreManager();
 			game.WinGame();
 		}
 		else
@@ -112,7 +115,6 @@ namespace Arcanoid
 			std::shared_ptr<Ball> ball = std::dynamic_pointer_cast<Ball>(gameObjects[1]);
 			platform->Restart();
 			ball->Restart();
-
 			blocks.clear();
 			++currentLevel;
 			CreateBlocks();
@@ -122,9 +124,8 @@ namespace Arcanoid
 	void GameStatePlayingData::Notify(std::shared_ptr<IObservable> observable)
 	{
 		Game& game = Application::Instance().GetGame();
-		auto scoreManager = Application::Instance().GetGame().GetScoreManager();
 		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {
-			this->scoreText.setString("Score: " + std::to_string(scoreManager->GetScore()));
+			this->scoreText.setString("Score: " + std::to_string(ScoreManager::Instance()->GetShared()->GetScore()));
 			if (IsWinCondition()) {
 				game.LoadNextLevel();
 			}
@@ -136,6 +137,33 @@ namespace Arcanoid
 				game.LoseGame();
 			}
 		}
+	}
+
+	GameMemento GameStatePlayingData::Save()
+	{
+		return GameMemento(blocks, ScoreManager::Instance()->GetScore(), currentLevel);
+	}
+
+	bool GameStatePlayingData::Load(const GameMemento& memento)
+	{
+		if (memento.GetBlocks().empty())
+		{
+			return false;
+		}
+		for (auto element : memento.GetBlocks())
+		{
+			sf::Vector2f position{
+				(float)(SETTINGS.BLOCK_WIDTH / 2 + element.second.x * SETTINGS.BLOCK_WIDTH),
+				(float)(element.second.y * SETTINGS.BLOCK_HEIGHT)
+			};
+			blocks.emplace_back(factories.at(element.first)->CreateBlock(position));
+			blocks.back()->AddObserver(ScoreManager::Instance()->GetShared());
+			blocks.back()->AddObserver(weak_from_this());
+		}
+		currentLevel = memento.GetLevel();
+		ScoreManager::Instance()->SetScore(memento.GetScoreData());
+		scoreText.setString("Score: " + std::to_string(memento.GetScoreData()));
+		return true;
 	}
 
 	void GameStatePlayingData::CreateBlocks()
@@ -152,7 +180,7 @@ namespace Arcanoid
 				(float)(blockPostion.y * SETTINGS.BLOCK_HEIGHT)
 			};
 			blocks.emplace_back(factories.at(blockType)->CreateBlock(position));
-			auto scoreManager = Application::Instance().GetGame().GetScoreManager();
+			auto scoreManager = ScoreManager::Instance()->GetShared();
 			blocks.back()->AddObserver(scoreManager);
 			blocks.back()->AddObserver(self);
 		}

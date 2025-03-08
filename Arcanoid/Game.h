@@ -35,17 +35,15 @@ namespace Arcanoid
 		bool IsEnableOptions(GameOptions option) const;
 		void SetOption(GameOptions option, bool value);
 
-		std::shared_ptr<ScoreManager> GetScoreManager() { return scoreManager; }
-
 		void StartGame();
 		void PauseGame();
 		void WinGame();
 		void LoseGame();
 		void UpdateGame(float timeDelta, sf::RenderWindow& window);
-		void ExitGame();
+		void ExitAndSave();
 		void QuitGame();
 		void ShowRecords();
-		void ExitRecords();
+		void Exit();
 		void LoadNextLevel();
 
 		void PopState();
@@ -65,7 +63,5 @@ namespace Arcanoid
 		GameStateType pendingGameStateType = GameStateType::None;
 
 		GameOptions options = GameOptions::DEFAULT;
-		int currentScore = 0;
-		std::shared_ptr<ScoreManager> scoreManager;
 	};
 }

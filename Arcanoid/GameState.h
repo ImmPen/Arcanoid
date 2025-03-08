@@ -12,7 +12,8 @@ namespace Arcanoid
 		GameOver,
 		Pause,
 		Records,
-		Win
+		Win,
+		Saves
 	};
 
 	class GameState

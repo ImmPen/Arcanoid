@@ -18,6 +18,14 @@ namespace Arcanoid
 			Application::Instance().GetGame().StartGame();
 			};
 
+		/*MenuItem continueGame;
+		continueGame.text.setString("Continue Game");
+		continueGame.text.setFont(this->font);
+		continueGame.text.setCharacterSize(24);
+		continueGame.onPressCallback = [](MenuItem&) {
+			Application::Instance().GetGame().LoadSaves();
+			};
+		*/
 		const bool isMusicOn = Application::Instance().GetGame().IsEnableOptions(GameOptions::MUSIC_ON);
 		MenuItem optionsMusicOn;
 		optionsMusicOn.text.setString("Music on: " + std::string(isMusicOn ? "On" : "Off"));
@@ -103,6 +111,7 @@ namespace Arcanoid
 		mainMenu.childrenAlignment = Alignment::Middle;
 		mainMenu.childrenSpacing = 10.f;
 		mainMenu.childrens.push_back(startGame);
+		//mainMenu.childrens.push_back(continueGame);
 		mainMenu.childrens.push_back(options);
 		mainMenu.childrens.push_back(recordsItem);
 		mainMenu.childrens.push_back(exitGameItem);

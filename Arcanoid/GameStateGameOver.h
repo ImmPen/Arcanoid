@@ -12,7 +12,6 @@ namespace Arcanoid
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Update(float timeDelta) override;
 		void Draw(sf::RenderWindow& window) override;
-
 	private:
 		sf::Font font;
 
