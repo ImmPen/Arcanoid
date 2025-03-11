@@ -135,6 +135,7 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockFactory.h" />
+    <ClInclude Include="Bonus.h" />
     <ClInclude Include="DelayedAction.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockFactory.cpp" />
+    <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameState.cpp" />

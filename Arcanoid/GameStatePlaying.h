@@ -10,7 +10,9 @@
 #include "IObserver.h"
 #include "Menu.h"
 #include "SaveManager.h"
+#include "Bonus.h"
 #include <memory>
+#include <variant>
 
 namespace Arcanoid
 {
@@ -42,7 +44,10 @@ namespace Arcanoid
 		//Game data
 		std::vector<std::shared_ptr<GameObject>> gameObjects;
 		std::vector<std::shared_ptr<Block>> blocks;
-		std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> factories;
+		std::vector<std::shared_ptr<Bonus>> bonuses;
+
+		std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> blockFactories;
+		std::unordered_map<BonusType, std::unique_ptr<BonusFactory>> bonusFactories;
 		LevelLoader levelLoader;
 		int currentLevel;
 

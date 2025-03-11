@@ -6,7 +6,6 @@
 #include "VariousBlock.h"
 #include "SoundManager.h"
 
-
 namespace Arcanoid
 {
 	void GameStatePlayingData::Init()
@@ -27,14 +26,16 @@ namespace Arcanoid
 		auto ball = std::make_shared<Ball>(sf::Vector2f({ SETTINGS.SCREEN_WIDTH / 2.f, SETTINGS.SCREEN_HEIGHT - SETTINGS.PLATFORM_HEIGHT - SETTINGS.BALL_SIZE / 2.f }));
 		ball->AddObserver(weak_from_this());
 		gameObjects.emplace_back(ball);
-		this->factories.emplace(BlockType::Animated, std::make_unique<AnimatedBlockFactory>());
-		this->factories.emplace(BlockType::Unbreakable, std::make_unique<UnbreakableBlockFactory>());
-		this->factories.emplace(BlockType::MultipleHit, std::make_unique<MultipleHitBlockFactory>());
-		this->factories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
+		this->blockFactories.emplace(BlockType::Animated, std::make_unique<AnimatedBlockFactory>());
+		this->blockFactories.emplace(BlockType::Unbreakable, std::make_unique<UnbreakableBlockFactory>());
+		this->blockFactories.emplace(BlockType::MultipleHit, std::make_unique<MultipleHitBlockFactory>());
+		this->blockFactories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
+		this->bonusFactories.emplace(BonusType::OnBallBonus, std::make_unique<BonusFactory>());
 		if (!Load(SaveManager::Instance().LoadFromFile(SETTINGS.RESOURCES_PATH + "save.dat")))
 		{
 			CreateBlocks();
 		}
+		bonuses.emplace_back(bonusFactories.at(BonusType::OnBallBonus)->Create(sf::Vector2f{ 10, 10 }));
 	}
 
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
@@ -53,6 +54,7 @@ namespace Arcanoid
 		static auto updateFunc = [timeDelta](auto element) { element->Update(timeDelta); };
 		std::for_each(gameObjects.begin(), gameObjects.end(), updateFunc);
 		std::for_each(blocks.begin(), blocks.end(), updateFunc);
+		std::for_each(bonuses.begin(), bonuses.end(), updateFunc);
 
 		std::shared_ptr<Platform> platform = std::static_pointer_cast<Platform>(gameObjects[0]);
 		std::shared_ptr<Ball> ball = std::static_pointer_cast<Ball>(gameObjects[1]);
@@ -101,6 +103,7 @@ namespace Arcanoid
 		static auto drawFunc = [&window](auto element) { element->Draw(window); };
 		std::for_each(gameObjects.begin(), gameObjects.end(), drawFunc);
 		std::for_each(blocks.begin(), blocks.end(), drawFunc);
+		std::for_each(bonuses.begin(), bonuses.end(), drawFunc);
 	}
 
 	void GameStatePlayingData::LoadNextLevel()
@@ -156,7 +159,7 @@ namespace Arcanoid
 				(float)(SETTINGS.BLOCK_WIDTH / 2 + element.second.x * SETTINGS.BLOCK_WIDTH),
 				(float)(element.second.y * SETTINGS.BLOCK_HEIGHT)
 			};
-			blocks.emplace_back(factories.at(element.first)->CreateBlock(position));
+			blocks.emplace_back(blockFactories.at(element.first)->Create(position));
 			blocks.back()->AddObserver(ScoreManager::Instance()->GetShared());
 			blocks.back()->AddObserver(weak_from_this());
 		}
@@ -179,7 +182,7 @@ namespace Arcanoid
 				(float)(SETTINGS.BLOCK_WIDTH / 2 + blockPostion.x * SETTINGS.BLOCK_WIDTH),
 				(float)(blockPostion.y * SETTINGS.BLOCK_HEIGHT)
 			};
-			blocks.emplace_back(factories.at(blockType)->CreateBlock(position));
+			blocks.emplace_back(blockFactories.at(blockType)->Create(position));
 			auto scoreManager = ScoreManager::Instance()->GetShared();
 			blocks.back()->AddObserver(scoreManager);
 			blocks.back()->AddObserver(self);
