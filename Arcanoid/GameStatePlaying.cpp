@@ -8,6 +8,11 @@
 
 namespace Arcanoid
 {
+	GameStatePlayingData::GameStatePlayingData() :
+		gen(std::random_device{}()), chance(0, 1), type(1, 3)
+	{
+
+	}
 	void GameStatePlayingData::Init()
 	{
 		currentLevel = 0;
@@ -30,12 +35,14 @@ namespace Arcanoid
 		this->blockFactories.emplace(BlockType::Unbreakable, std::make_unique<UnbreakableBlockFactory>());
 		this->blockFactories.emplace(BlockType::MultipleHit, std::make_unique<MultipleHitBlockFactory>());
 		this->blockFactories.emplace(BlockType::Glass, std::make_unique<GlassBlockFactory>());
-		this->bonusFactories.emplace(BonusType::OnBallBonus, std::make_unique<BonusFactory>());
+		this->bonusFactories.emplace(BonusType::OnBallBonus, std::make_unique<OnBallBonusFactory>());
+		this->bonusFactories.emplace(BonusType::OnBlockBonus, std::make_unique<OnBlockBonusFactory>());
+		this->bonusFactories.emplace(BonusType::OnPlatformBonus, std::make_unique<OnPlatformBonusFactory>());
 		if (!Load(SaveManager::Instance().LoadFromFile(SETTINGS.RESOURCES_PATH + "save.dat")))
 		{
 			CreateBlocks();
 		}
-		bonuses.emplace_back(bonusFactories.at(BonusType::OnBallBonus)->Create(sf::Vector2f{ 10, 10 }));
+
 	}
 
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
@@ -80,6 +87,17 @@ namespace Arcanoid
 				return block->IsBroken();
 			}
 			), blocks.end()
+		);
+
+		bonuses.erase(
+			std::remove_if(bonuses.begin(), bonuses.end(),
+				[platform](auto bonus)
+				{
+					auto collisionType = platform->GetCollision(bonus);
+					bool outOfBounds = bonus->GetSpriteRect().top > SETTINGS.SCREEN_HEIGHT;
+					return (collisionType != CollisionType::None) || outOfBounds;
+				}),
+			bonuses.end()
 		);
 
 		if (isNeedInverseX)
@@ -129,6 +147,17 @@ namespace Arcanoid
 		Game& game = Application::Instance().GetGame();
 		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {
 			this->scoreText.setString("Score: " + std::to_string(ScoreManager::Instance()->GetShared()->GetScore()));
+			auto rand = chance(gen);
+			if (rand < 1)
+			{
+				auto bonusType = Bonus::GetTypeFromInt(type(gen));
+				auto rect = block->GetRect();
+				auto position = sf::Vector2f{ 
+					rect.left + rect.width / 2.f, 
+					rect.top + rect.height / 2.f };
+				bonuses.emplace_back(bonusFactories.at(bonusType)->Create(position));
+				bonuses.back()->AddObserver(weak_from_this);
+			}
 			if (IsWinCondition()) {
 				game.LoadNextLevel();
 			}

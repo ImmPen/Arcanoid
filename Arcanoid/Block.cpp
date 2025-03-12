@@ -18,7 +18,7 @@ namespace Arcanoid
 		}	
 	}
 
-	int const Block::BlockTypeToColorNum(BlockType type)
+	int Block::BlockTypeToColorNum(BlockType type)
 	{
 		switch (type)
 		{

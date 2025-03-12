@@ -21,8 +21,4 @@ namespace Arcanoid
     {
         return std::make_shared<GlassBlock>(position);
     }
-    std::shared_ptr<Bonus> BonusFactory::Create(const sf::Vector2f& position)
-    {
-        return std::make_shared<Bonus>(position);
-    }
 }

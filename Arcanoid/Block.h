@@ -18,7 +18,7 @@ namespace Arcanoid
 	class Block : public GameObject, public ICollidable, public IObservable
 	{
 	protected:
-		static int const BlockTypeToColorNum(BlockType type);
+		static int BlockTypeToColorNum(BlockType type);
 		void OnHit(CollisionType type) override;
 		int hitCount = 1;
 		int hitDecrease = 1;

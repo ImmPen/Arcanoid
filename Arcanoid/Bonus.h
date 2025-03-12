@@ -3,6 +3,7 @@
 #include "GameSettings.h"
 #include "SFML/Graphics.hpp"
 #include "Collidable.h"
+#include "IObserver.h"
 
 namespace Arcanoid
 {
@@ -14,21 +15,17 @@ namespace Arcanoid
 	};
 
 	class Bonus :
-		public GameObject//, public ICollidable//, public IDelayedAction
+		public GameObject, public ICollidable, public IObservable//, IDelayedAction
 	{
+	protected:
+		virtual void OnHit(CollisionType collisionType) override;
 	public:
-		Bonus(sf::Vector2f position) :
-			GameObject(
-				SETTINGS.RESOURCES_PATH + (std::string)"Powerups.png",
-				SETTINGS.BONUS_RECT_IN_TEXTURE,
-				position,
-				SETTINGS.BONUS_WIDTH,
-				SETTINGS.BONUS_HEIGHT)
-		{	
-					
-		}
+		Bonus(sf::Vector2f position);
 		virtual void Update(float timeDelta) override;
+		virtual CollisionType GetCollision(std::shared_ptr<ICollidable> collidable) const override;
+		virtual sf::FloatRect GetRect() override;
 
+		static BonusType GetTypeFromInt(int type);
 	private:
 
 	};
@@ -36,10 +33,16 @@ namespace Arcanoid
 	class OnBallBonus : public Bonus
 	{
 	public:
-		OnBallBonus(sf::Vector2f position) :
-			Bonus(position)
-		{
-
-		}
+		OnBallBonus(sf::Vector2f position);
+	};
+	class OnBlockBonus : public Bonus
+	{
+	public:
+		OnBlockBonus(sf::Vector2f position);
+	};
+	class OnPlatformBonus : public Bonus
+	{
+	public:
+		OnPlatformBonus(sf::Vector2f position);
 	};
 }

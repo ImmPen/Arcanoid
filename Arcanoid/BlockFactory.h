@@ -5,7 +5,6 @@
 namespace Arcanoid
 {
 	class Block;
-	class Bonus;
 
 	class BlockFactory
 	{
@@ -42,12 +41,5 @@ namespace Arcanoid
 	public:
 		virtual std::shared_ptr<Block> Create(const sf::Vector2f& position) override;
 		~GlassBlockFactory() override = default;
-	};
-
-	class BonusFactory
-	{
-	public:
-		virtual std::shared_ptr<Bonus> Create(const sf::Vector2f& position);
-		virtual ~BonusFactory() = default;
 	};
 }

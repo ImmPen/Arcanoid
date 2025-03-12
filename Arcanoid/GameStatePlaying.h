@@ -11,14 +11,18 @@
 #include "Menu.h"
 #include "SaveManager.h"
 #include "Bonus.h"
+#include "BonusFactory.h"
 #include <memory>
 #include <variant>
+#include <random>
 
 namespace Arcanoid
 {
 	class GameStatePlayingData : public GameStateData, public IObserver, public std::enable_shared_from_this<GameStatePlayingData>
 	{
 	public:
+		GameStatePlayingData();
+
 		void Init() override;
 		void HandleWindowEvent(const sf::Event& event) override;
 		void Update(float timeDelta) override;
@@ -53,5 +57,10 @@ namespace Arcanoid
 
 		//UI data
 		sf::Text scoreText;
+
+		//Random generator
+		std::mt19937 gen;
+		std::uniform_real_distribution<float> chance;
+		std::uniform_int_distribution<int> type;
 	};
 }
