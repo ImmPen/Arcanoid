@@ -19,6 +19,9 @@ namespace Arcanoid
 		CollisionType GetCollision(std::shared_ptr<ICollidable> collidable) const override;
 
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
+
+		void ApplyEffect();
+		void DenyEffect();
 	private:
 		void Move(float speed);
 	};

@@ -74,6 +74,16 @@ namespace Arcanoid
 			? CollisionType::Hit : CollisionType::None;
 	}
 
+	void Platform::ApplyEffect()
+	{
+		sprite.setScale({ static_cast<float>(SETTINGS.SCALE * 1.2), static_cast<float>(SETTINGS.SCALE) });
+	}
+
+	void Platform::DenyEffect()
+	{
+		sprite.setScale({ static_cast<float>(SETTINGS.SCALE), static_cast<float>(SETTINGS.SCALE) });
+	}
+
 	void Platform::Move(float speed)
 	{
 		auto positon = this->sprite.getPosition();

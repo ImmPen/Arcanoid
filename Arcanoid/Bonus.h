@@ -9,6 +9,7 @@ namespace Arcanoid
 {
 	enum class BonusType
 	{
+		NoBonus,
 		OnBallBonus,
 		OnBlockBonus,
 		OnPlatformBonus
@@ -19,11 +20,14 @@ namespace Arcanoid
 	{
 	protected:
 		virtual void OnHit(CollisionType collisionType) override;
+	protected:
+		BonusType type;
 	public:
 		Bonus(sf::Vector2f position);
 		virtual void Update(float timeDelta) override;
 		virtual CollisionType GetCollision(std::shared_ptr<ICollidable> collidable) const override;
 		virtual sf::FloatRect GetRect() override;
+		BonusType GetType() { return type; }
 
 		static BonusType GetTypeFromInt(int type);
 	private:

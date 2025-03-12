@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Block.h"
 #include "IObserver.h"
+#include "GameSettings.h"
 
 namespace Arcanoid
 {
@@ -21,7 +22,11 @@ namespace Arcanoid
 		void ChangeAngle(float angle);
 
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
+
+		void ApplyEffect();
+		void DenyEffect();
 	private:
+		float speed = SETTINGS.BALL_SPEED;
 		void OnHit(CollisionType type) override;
 		sf::Vector2f direction;
 		float lastAngle = 90; // [-180; 180] degrees

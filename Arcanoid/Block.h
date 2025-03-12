@@ -27,12 +27,17 @@ namespace Arcanoid
 	public:
 		Block(const sf::Vector2f& position, const int color);
 		virtual ~Block() override = default;
+
 		void Update(float timeDelta) override;
 		CollisionType GetCollision(std::shared_ptr<ICollidable> collidableObject) const override;
 		sf::FloatRect GetRect() override { return GetSpriteRect(); }
+
 		virtual BlockType GetType() { return BlockType::Usual; }
 		virtual bool IsBroken() const;
 		int GetScore();
+
+		void ApplyEffect();
+		void DenyEffect();
 	};
 
 	class SmoothDestroyableBlock : public Block, public IDelayedAction

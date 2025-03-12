@@ -1,3 +1,128 @@
-﻿  Bonus.cpp
-D:\Programming\arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращаемый адрес локальной переменной или временного 
-  Arcanoid.vcxproj -> D:\Programming\arcanoid\x64\Debug\Arcanoid.exe
+﻿  Application.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Application.cpp")
+  
+  Ball.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Ball.cpp")
+  
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(17,31): warning C4244: =: преобразование "double" в "T", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(17,31): warning C4244:         with
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(17,31): warning C4244:         [
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(17,31): warning C4244:             T=float
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(17,31): warning C4244:         ]
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(18,31): warning C4244: =: преобразование "double" в "T", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(18,31): warning C4244:         with
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(18,31): warning C4244:         [
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(18,31): warning C4244:             T=float
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(18,31): warning C4244:         ]
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(57,31): warning C4244: =: преобразование "double" в "T", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(57,31): warning C4244:         with
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(57,31): warning C4244:         [
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(57,31): warning C4244:             T=float
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(57,31): warning C4244:         ]
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(58,26): warning C4244: =: преобразование "double" в "T", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(58,26): warning C4244:         with
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(58,26): warning C4244:         [
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(58,26): warning C4244:             T=float
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(58,26): warning C4244:         ]
+D:\Programming\Arcanoid\Arcanoid\Ball.cpp(64,31): warning C4244: =: преобразование "double" в "float", возможна потеря данных
+  Block.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Block.cpp")
+  
+  BlockFactory.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "BlockFactory.cpp")
+  
+  Bonus.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Bonus.cpp")
+  
+  BonusFactory.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "BonusFactory.cpp")
+  
+  BonusState.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "BonusState.cpp")
+  
+  Game.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Game.cpp")
+  
+  GameState.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameState.cpp")
+  
+  GameStateGameOver.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStateGameOver.cpp")
+  
+D:\Programming\Arcanoid\Arcanoid\GameStateGameOver.cpp(117,69): warning C4244: аргумент: преобразование "double" в "T", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\GameStateGameOver.cpp(117,69): warning C4244:         with
+D:\Programming\Arcanoid\Arcanoid\GameStateGameOver.cpp(117,69): warning C4244:         [
+D:\Programming\Arcanoid\Arcanoid\GameStateGameOver.cpp(117,69): warning C4244:             T=float
+D:\Programming\Arcanoid\Arcanoid\GameStateGameOver.cpp(117,69): warning C4244:         ]
+  GameStateMainMenu.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStateMainMenu.cpp")
+  
+  GameStatePause.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStatePause.cpp")
+  
+  GameStatePlaying.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStatePlaying.cpp")
+  
+  GameStateRecords.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStateRecords.cpp")
+  
+  GameStateWin.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "GameStateWin.cpp")
+  
+  Level.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Level.cpp")
+  
+D:\Programming\Arcanoid\Arcanoid\Level.cpp(16,21): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+  Main.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Main.cpp")
+  
+  Platform.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "Platform.cpp")
+  
+D:\Programming\Arcanoid\Arcanoid\Platform.cpp(65,91): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Programming\Arcanoid\Arcanoid\Platform.cpp(70,104): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  SaveManager.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "SaveManager.cpp")
+  
+  ScoreManager.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "ScoreManager.cpp")
+  
+  Создание кода...
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+D:\Programming\Arcanoid\Arcanoid\Block.cpp(34,1): warning C4715: Arcanoid::Block::BlockTypeToColorNum: значение возвращается не при всех путях выполнения
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+  Компиляция...
+  SoundManager.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "SoundManager.cpp")
+  
+  VariousBlock.cpp
+D:\Programming\Arcanoid\Arcanoid\GameSettings.h(52,30): warning C4305: инициализация: усечение из "double" в "const float"
+  (компиляция исходного файла "VariousBlock.cpp")
+  
+  Создание кода...
+D:\Programming\Arcanoid\Arcanoid\GameObject.h(14,1): warning C4172: возвращение адреса локальной или временной переменной 
+  Arcanoid.vcxproj -> D:\Programming\Arcanoid\x64\Debug\Arcanoid.exe

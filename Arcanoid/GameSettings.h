@@ -49,6 +49,7 @@ namespace Arcanoid
 		const sf::IntRect BALL_RECT_IN_TEXTURE = sf::IntRect(50, 34, BALL_SIZE_ON_TILESET, BALL_SIZE_ON_TILESET);
 		const sf::IntRect BLOCK_RECT_IN_TEXTURE = sf::IntRect(32, 176, BLOCK_WIDTH_ON_TILESET, BLOCK_HEIGHT_ON_TILESET);
 
+		const float BONUS_CHANCE = 0.1;
 		const int BONUS_WIDTH_ON_TILESET = 16;
 		const int BONUS_HEIGHT_ON_TILESET = 8;
 		const int BONUS_WIDTH = BONUS_WIDTH_ON_TILESET * SCALE;

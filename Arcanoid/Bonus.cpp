@@ -11,7 +11,8 @@ namespace Arcanoid
 			SETTINGS.BONUS_RECT_IN_TEXTURE,
 			position,
 			SETTINGS.BONUS_WIDTH,
-			SETTINGS.BONUS_HEIGHT)
+			SETTINGS.BONUS_HEIGHT),
+		type(BonusType::NoBonus)
 	{
 
 	}
@@ -67,6 +68,7 @@ namespace Arcanoid
 	OnBallBonus::OnBallBonus(sf::Vector2f position) :
 		Bonus(position)
 	{
+		type = BonusType::OnBallBonus;
 		auto rect = SETTINGS.BONUS_RECT_IN_TEXTURE;
 		rect.top = rect.top + rect.height;
 		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "Powerups.png", rect));
@@ -75,6 +77,7 @@ namespace Arcanoid
 	OnBlockBonus::OnBlockBonus(sf::Vector2f position) :
 		Bonus(position)
 	{
+		type = BonusType::OnBlockBonus;
 		auto rect = SETTINGS.BONUS_RECT_IN_TEXTURE;
 		rect.top = rect.top + 3 * rect.height;
 		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "Powerups.png", rect));
@@ -83,6 +86,7 @@ namespace Arcanoid
 	OnPlatformBonus::OnPlatformBonus(sf::Vector2f position) :
 		Bonus(position)
 	{
+		type = BonusType::OnPlatformBonus;
 		auto rect = SETTINGS.BONUS_RECT_IN_TEXTURE;
 		rect.top = rect.top + 2 * rect.height;
 		assert(this->texture.loadFromFile(SETTINGS.RESOURCES_PATH + "Powerups.png", rect));

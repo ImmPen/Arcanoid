@@ -23,6 +23,7 @@ namespace Arcanoid
 		this->scoreText.setCharacterSize(12);
 
 		ScoreManager::Instance()->GetShared()->ClearScore();
+		bonusState->AddObserver(weak_from_this());
 
 		gameObjects.emplace_back(std::make_shared<Platform>(
 			sf::Vector2f({
@@ -42,7 +43,6 @@ namespace Arcanoid
 		{
 			CreateBlocks();
 		}
-
 	}
 
 	void GameStatePlayingData::HandleWindowEvent(const sf::Event& event)
@@ -62,6 +62,7 @@ namespace Arcanoid
 		std::for_each(gameObjects.begin(), gameObjects.end(), updateFunc);
 		std::for_each(blocks.begin(), blocks.end(), updateFunc);
 		std::for_each(bonuses.begin(), bonuses.end(), updateFunc);
+		bonusState->Update(timeDelta);
 
 		std::shared_ptr<Platform> platform = std::static_pointer_cast<Platform>(gameObjects[0]);
 		std::shared_ptr<Ball> ball = std::static_pointer_cast<Ball>(gameObjects[1]);
@@ -69,7 +70,7 @@ namespace Arcanoid
 		bool isNeedInverseX = false;
 		bool isNeedInverseY = false;
 		bool hasBrokeOneBlock = false;
-		blocks.erase(
+		blocks.erase(										//removing blocks
 			std::remove_if(blocks.begin(), blocks.end(),
 			[ball, &hasBrokeOneBlock, &isNeedInverseX, &isNeedInverseY, this](auto block)
 			{
@@ -89,16 +90,18 @@ namespace Arcanoid
 			), blocks.end()
 		);
 
-		bonuses.erase(
+		bonuses.erase(										//removing bonus capsules on hit with platform
 			std::remove_if(bonuses.begin(), bonuses.end(),
-				[platform](auto bonus)
+				[platform, this](auto bonus)
 				{
-					auto collisionType = platform->GetCollision(bonus);
 					bool outOfBounds = bonus->GetSpriteRect().top > SETTINGS.SCREEN_HEIGHT;
-					return (collisionType != CollisionType::None) || outOfBounds;
+					bool collisionWithPlatform = bonus->CheckCollision(platform);
+					return collisionWithPlatform || outOfBounds;
 				}),
 			bonuses.end()
 		);
+
+		
 
 		if (isNeedInverseX)
 		{
@@ -137,6 +140,8 @@ namespace Arcanoid
 			platform->Restart();
 			ball->Restart();
 			blocks.clear();
+			bonusState = std::make_shared<BonusState>();
+			bonusState->AddObserver(weak_from_this());
 			++currentLevel;
 			CreateBlocks();
 		}
@@ -148,7 +153,7 @@ namespace Arcanoid
 		if (auto block = std::dynamic_pointer_cast<Block>(observable); block) {
 			this->scoreText.setString("Score: " + std::to_string(ScoreManager::Instance()->GetShared()->GetScore()));
 			auto rand = chance(gen);
-			if (rand < 1)
+			if (rand < SETTINGS.BONUS_CHANCE)
 			{
 				auto bonusType = Bonus::GetTypeFromInt(type(gen));
 				auto rect = block->GetRect();
@@ -156,7 +161,7 @@ namespace Arcanoid
 					rect.left + rect.width / 2.f, 
 					rect.top + rect.height / 2.f };
 				bonuses.emplace_back(bonusFactories.at(bonusType)->Create(position));
-				bonuses.back()->AddObserver(weak_from_this);
+				bonuses.back()->AddObserver(weak_from_this());
 			}
 			if (IsWinCondition()) {
 				game.LoadNextLevel();
@@ -168,6 +173,35 @@ namespace Arcanoid
 				SoundManager::Instance().PlaySound(Sounds::gameOverSound);
 				game.LoseGame();
 			}
+		}
+		else if (auto bonus = std::dynamic_pointer_cast<Bonus>(observable); bonus)
+		{
+			auto type = bonus->GetType();
+			switch (type)
+			{
+			case Arcanoid::BonusType::NoBonus:
+				break;
+			case Arcanoid::BonusType::OnBallBonus:
+				bonusState = std::make_shared<OnBallDecorator>(bonusState);
+				break;
+			case Arcanoid::BonusType::OnBlockBonus:
+				bonusState = std::make_shared<OnBlockDecorator>(bonusState);
+				break;
+			case Arcanoid::BonusType::OnPlatformBonus:
+				bonusState = std::make_shared<OnPlatformDecorator>(bonusState);
+				break;
+			default:
+				break;
+			}
+			if (type != BonusType::NoBonus)
+			{
+				bonusState->AddObserver(weak_from_this());
+				UpdateBonusStates();
+			}
+		}
+		else if (auto state = std::static_pointer_cast<BonusState>(observable); state)
+		{
+			UpdateBonusStates();
 		}
 	}
 
@@ -196,6 +230,43 @@ namespace Arcanoid
 		ScoreManager::Instance()->SetScore(memento.GetScoreData());
 		scoreText.setString("Score: " + std::to_string(memento.GetScoreData()));
 		return true;
+	}
+
+	void GameStatePlayingData::UpdateBonusStates()
+	{
+		std::shared_ptr<Platform> platform = std::static_pointer_cast<Platform>(gameObjects[0]);
+		std::shared_ptr<Ball> ball = std::static_pointer_cast<Ball>(gameObjects[1]);
+
+		ball->DenyEffect();
+		platform->DenyEffect();
+		for (auto block : blocks)
+		{
+			block->DenyEffect();
+		}
+
+		auto bonusesFromDecorator = bonusState->GetBonus();
+		for (auto bonus : bonusesFromDecorator)
+		{
+			switch (bonus)
+			{
+			case BonusType::NoBonus:
+				break;
+			case BonusType::OnBallBonus:
+				ball->ApplyEffect();
+				break;
+			case BonusType::OnBlockBonus:
+				for (auto block : blocks)
+				{
+					block->ApplyEffect();
+				}
+				break;
+			case BonusType::OnPlatformBonus:
+				platform->ApplyEffect();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	void GameStatePlayingData::CreateBlocks()

@@ -12,6 +12,7 @@
 #include "SaveManager.h"
 #include "Bonus.h"
 #include "BonusFactory.h"
+#include "BonusState.h"
 #include <memory>
 #include <variant>
 #include <random>
@@ -34,6 +35,9 @@ namespace Arcanoid
 
 		GameMemento Save();													// Saves
 		bool Load(const GameMemento& memento);
+
+		void UpdateBonusStates();
+
 	private:
 		void CreateBlocks();
 		bool IsWinCondition();
@@ -42,6 +46,7 @@ namespace Arcanoid
 			const sf::FloatRect& blockRect,
 			bool& isNeedInverseDirectionX,
 			bool& isNeedInverseDirectionY);
+
 		//Resources
 		sf::Font font;
 
@@ -50,8 +55,11 @@ namespace Arcanoid
 		std::vector<std::shared_ptr<Block>> blocks;
 		std::vector<std::shared_ptr<Bonus>> bonuses;
 
+		std::shared_ptr<BonusState> bonusState = std::make_shared<BonusState>();
+
 		std::unordered_map<BlockType, std::unique_ptr<BlockFactory>> blockFactories;
 		std::unordered_map<BonusType, std::unique_ptr<BonusFactory>> bonusFactories;
+
 		LevelLoader levelLoader;
 		int currentLevel;
 

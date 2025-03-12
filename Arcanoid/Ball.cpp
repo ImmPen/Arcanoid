@@ -20,7 +20,7 @@ namespace Arcanoid
 
 	void Ball::Update(float timeDelta)
 	{
-		const auto pos = sprite.getPosition() + SETTINGS.BALL_SPEED * timeDelta * this->direction;
+		const auto pos = sprite.getPosition() + speed * timeDelta * this->direction;
 		this->sprite.setPosition(pos);
 
 		if (pos.x - SETTINGS.BALL_SIZE / 2 <= 0 || pos.x + SETTINGS.BALL_SIZE / 2 >= SETTINGS.SCREEN_WIDTH) {
@@ -56,6 +56,18 @@ namespace Arcanoid
 		lastAngle = lastAngle < -180 ? lastAngle + 360 : lastAngle;
 		this->direction.x = std::cos(std::numbers::pi * lastAngle / 180);
 		this->direction.y = -1 * std::sin(std::numbers::pi * lastAngle / 180);
+	}
+
+	void Ball::ApplyEffect()
+	{
+		sprite.setColor(sf::Color::Red);
+		speed = SETTINGS.BALL_SPEED * 1.5;
+	}
+
+	void Ball::DenyEffect()
+	{
+		sprite.setColor(sf::Color::White);
+		speed = SETTINGS.BALL_SPEED;
 	}
 
 	void Ball::OnHit(CollisionType type)

@@ -67,6 +67,16 @@ namespace Arcanoid
 		return this->score;
 	}
 
+	void Block::ApplyEffect()
+	{
+		hitDecrease = SETTINGS.MAX_DURABILITY;
+	}
+
+	void Block::DenyEffect()
+	{
+		hitDecrease = 1;
+	}
+
 	void SmoothDestroyableBlock::OnHit(CollisionType type)
 	{
 		Super::OnHit(type);
